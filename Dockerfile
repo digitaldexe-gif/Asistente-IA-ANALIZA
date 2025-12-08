@@ -1,22 +1,25 @@
-FROM node:20-alpine
+FROM node:20-bullseye
+
+# Install OpenSSL and other dependencies
+RUN apt-get update && apt-get install -y \
+    openssl \
+    libssl-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install dependencies
 COPY package*.json ./
+COPY prisma ./prisma/
+
 RUN npm install
 
-# Copy source code
-COPY . .
-
-# Generate Prisma Client
 RUN npx prisma generate
 
-# Build the project
+COPY . .
+
 RUN npm run build
 
-# Expose the port (Railway will override PORT env var, but 3000 is default)
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
