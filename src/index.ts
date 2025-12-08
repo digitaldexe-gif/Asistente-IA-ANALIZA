@@ -89,6 +89,15 @@ fastify.register(async (fastify) => {
     fastify.post('/api/history', historyHandler);
     fastify.post('/api/appointments', appointmentsHandler);
     fastify.post('/api/exams', examsHandler);
+
+    // --- GOES-Vertical Integration Endpoints ---
+    const { validateGoesCodeHandler } = await import('./api/validate-goes-code.js');
+    const { syncPatientHandler } = await import('./api/sync-patient.js');
+    const { logConversationHandler } = await import('./api/log-conversation.js');
+
+    fastify.post('/api/validate-goes-code', validateGoesCodeHandler);
+    fastify.post('/api/sync-patient', syncPatientHandler);
+    fastify.post('/api/log-conversation', logConversationHandler);
 });
 
 const start = async () => {

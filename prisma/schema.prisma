@@ -65,3 +65,16 @@ model PatientProfile {
 
   patient           Patient  @relation(fields: [patientId], references: [id])
 }
+
+model ConversationLog {
+  id          String   @id @default(uuid())
+  patientId   String?
+  sessionId   String
+  turn        Int
+  speaker     String   // "ai" or "patient"
+  message     String   @db.Text
+  timestamp   DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([patientId])
+}
