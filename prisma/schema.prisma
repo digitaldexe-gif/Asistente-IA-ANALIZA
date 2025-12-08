@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Patient {
+  id              String   @id @default(uuid())
+  name            String
+  surname         String
+  primaryGoesCode String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  phones          PatientPhone[]
+  history         CallHistory[]
+  exams           PatientExam[]
+  profile         PatientProfile?
+
+  @@unique([name, surname])
+}
+
+model PatientExam {
+  id        String   @id @default(uuid())
+  patientId String
+  examCode  String
+  examName  String
+  date      DateTime @default(now())
+
+  patient   Patient  @relation(fields: [patientId], references: [id])
+}
+
+model PatientPhone {
+  id          String   @id @default(uuid())
+  patientId   String
+  phoneNumber String
+  createdAt   DateTime @default(now())
+
+  patient     Patient  @relation(fields: [patientId], references: [id])
+
+  @@unique([patientId, phoneNumber])
+  @@index([phoneNumber])
+}
+
+model CallHistory {
+  id        String   @id @default(uuid())
+  patientId String
+  date      DateTime @default(now())
+  summary   String
+  outcome   String
+  
+  patient   Patient  @relation(fields: [patientId], references: [id])
+}
+
+model PatientProfile {
+  id                String   @id @default(uuid())
+  patientId         String   @unique
+  preferredBranchId String?
+  emotionalState    String?
+  notes             String?
+
+  patient           Patient  @relation(fields: [patientId], references: [id])
+}

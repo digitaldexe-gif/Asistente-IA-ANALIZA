@@ -1,0 +1,1019 @@
+{
+    "exams": [
+        {
+            "code": "19",
+            "name": "Electrocardiograma (ECG)",
+            "category": "Cardiología",
+            "duration": "30 minutos",
+            "description": "Prueba que registra la actividad eléctrica del corazón mediante electrodos colocados sobre el pecho.",
+            "requirements": [
+                "No requiere ayuno.",
+                "Evitar cremas, aceites o lociones en el pecho el día del examen.",
+                "Usar ropa cómoda y fácil de remover en la parte superior."
+            ],
+            "indications": [
+                "Es un examen indoloro.",
+                "Apto para la mayoría de pacientes."
+            ]
+        },
+        {
+            "code": "20",
+            "name": "Ecocardiograma",
+            "category": "Cardiología",
+            "duration": "30 minutos",
+            "description": "Ultrasonido del corazón para evaluar su estructura y funcionamiento.",
+            "requirements": [
+                "No requiere ayuno.",
+                "No requiere preparación especial."
+            ],
+            "indications": [
+                "Examen indoloro.",
+                "Se aplica gel sobre el pecho para obtener imágenes claras."
+            ]
+        },
+        {
+            "code": "21",
+            "name": "Holter 24 horas",
+            "category": "Cardiología",
+            "duration": "30 minutos (instalación)",
+            "description": "Monitor portátil que registra el ritmo cardíaco durante 24 horas.",
+            "requirements": [
+                "No requiere ayuno.",
+                "Ducharse previamente (no se puede mojar el equipo).",
+                "Usar ropa cómoda que permita cubrir el dispositivo."
+            ],
+            "indications": [
+                "No se debe retirar el equipo por ningún motivo.",
+                "Registrar actividades o síntomas si así se indica."
+            ]
+        },
+        {
+            "code": "22",
+            "name": "Prueba de Esfuerzo",
+            "category": "Cardiología",
+            "duration": "30 minutos",
+            "description": "Evaluación del corazón durante ejercicio en banda o bicicleta.",
+            "requirements": [
+                "Evitar comidas pesadas 3 horas antes.",
+                "Usar ropa deportiva y calzado cómodo.",
+                "No consumir café ni energizantes 6 horas antes."
+            ],
+            "indications": [
+                "Puede generar cansancio, es normal.",
+                "No apto para embarazadas ni personas con indicación médica contraria."
+            ]
+        },
+        {
+            "code": "23",
+            "name": "Monitoreo de Presión Arterial (MAPA 24h)",
+            "category": "Cardiología",
+            "duration": "30 minutos (instalación)",
+            "description": "Control continuo de presión arterial durante 24 horas.",
+            "requirements": [
+                "No requiere ayuno.",
+                "Llevar ropa que permita usar brazalete en el brazo."
+            ],
+            "indications": [
+                "El aparato medirá automáticamente durante el día y la noche.",
+                "Evitar golpes o presionar el brazalete."
+            ]
+        },
+        {
+            "code": "11",
+            "name": "Radiografía de Tórax",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Imagen del corazón y pulmones mediante rayos X.",
+            "requirements": [
+                "No requiere ayuno.",
+                "Retirar objetos metálicos del pecho."
+            ],
+            "indications": [
+                "No recomendado para embarazadas."
+            ]
+        },
+        {
+            "code": "12",
+            "name": "Ecografía Abdominal",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Ultrasonido para evaluar hígado, riñones, vesícula y órganos abdominales.",
+            "requirements": [
+                "Ayuno de 6 a 8 horas.",
+                "Beber 1 vaso de agua si se lo indican (varía por protocolo)."
+            ],
+            "indications": [
+                "Totalmente indoloro."
+            ]
+        },
+        {
+            "code": "13",
+            "name": "Mamografía",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Imagen de las mamas para detección temprana de cáncer.",
+            "requirements": [
+                "No usar desodorante, talco o perfume el día del examen.",
+                "No requiere ayuno."
+            ],
+            "indications": [
+                "Puede generar leve molestia por la compresión.",
+                "No se recomienda en embarazo."
+            ]
+        },
+        {
+            "code": "14",
+            "name": "Tomografía Computarizada (TAC)",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Imágenes detalladas por cortes mediante equipo de tomografía.",
+            "requirements": [
+                "Preguntar si el estudio requiere contraste (algunos sí).",
+                "Si requiere contraste: ayuno de 4 horas."
+            ],
+            "indications": [
+                "No apto para embarazadas."
+            ]
+        },
+        {
+            "code": "15",
+            "name": "Resonancia Magnética (RM)",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Imágenes de alta resolución mediante campos magnéticos.",
+            "requirements": [
+                "No usar objetos metálicos.",
+                "Avisar si tiene marcapasos, implantes o prótesis.",
+                "No requiere ayuno en la mayoría de casos."
+            ],
+            "indications": [
+                "Puede generar ruido fuerte; se dan tapones.",
+                "No usa radiación."
+            ]
+        },
+        {
+            "code": "16",
+            "name": "Ecografía Obstétrica",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Ultrasonido para seguimiento del embarazo.",
+            "requirements": [
+                "Beber 1 litro de agua 1 hora antes.",
+                "No orinar para mantener vejiga llena."
+            ],
+            "indications": [
+                "Indoloro.",
+                "Segura para el embarazo."
+            ]
+        },
+        {
+            "code": "17",
+            "name": "Densitometría Ósea",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Mide la densidad de los huesos para evaluar riesgo de osteoporosis.",
+            "requirements": [
+                "No llevar objetos metálicos.",
+                "No requiere ayuno."
+            ],
+            "indications": [
+                "Procedimiento rápido y sin dolor."
+            ]
+        },
+        {
+            "code": "18",
+            "name": "Radiografía de Columna",
+            "category": "Imagenología",
+            "duration": "30 minutos",
+            "description": "Imagen de columna vertebral mediante rayos X.",
+            "requirements": [
+                "No requiere ayuno.",
+                "Retirar prendas metálicas."
+            ],
+            "indications": [
+                "No apto para embarazadas."
+            ]
+        },
+        {
+            "code": "1",
+            "name": "Hemograma Completo",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Analiza células sanguíneas (glóbulos blancos, rojos y plaquetas).",
+            "requirements": [
+                "No requiere ayuno, pero si se realiza junto a otros exámenes puede necesitarlo."
+            ],
+            "indications": []
+        },
+        {
+            "code": "2",
+            "name": "Glucosa en Ayunas",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Mide el nivel de azúcar en sangre.",
+            "requirements": [
+                "Ayuno de 8 horas.",
+                "Solo tomar agua."
+            ],
+            "indications": []
+        },
+        {
+            "code": "3",
+            "name": "Perfil Lipídico",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Evalúa colesterol total, HDL, LDL y triglicéridos.",
+            "requirements": [
+                "Ayuno de 12 horas recomendado."
+            ],
+            "indications": []
+        },
+        {
+            "code": "4",
+            "name": "Función Renal",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Evalúa riñones mediante creatinina, urea y ácido úrico.",
+            "requirements": [
+                "Generalmente no requiere ayuno.",
+                "Si se acompaña con otros exámenes, puede requerirlo."
+            ],
+            "indications": []
+        },
+        {
+            "code": "5",
+            "name": "Función Hepática",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Evalúa funcionamiento del hígado (transaminasas, bilirrubina).",
+            "requirements": [
+                "No requiere ayuno en la mayoría de casos."
+            ],
+            "indications": []
+        },
+        {
+            "code": "6",
+            "name": "Examen General de Orina",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Análisis físico, químico y microscópico de la orina.",
+            "requirements": [
+                "Primera orina de la mañana preferible.",
+                "Entregar muestra en frasco estéril."
+            ],
+            "indications": []
+        },
+        {
+            "code": "7",
+            "name": "TSH (Tiroides)",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Mide la hormona estimulante de tiroides.",
+            "requirements": [
+                "No requiere ayuno."
+            ],
+            "indications": []
+        },
+        {
+            "code": "8",
+            "name": "Hemoglobina Glicosilada (HbA1c)",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Mide control de glucosa a largo plazo (2–3 meses).",
+            "requirements": [
+                "No requiere ayuno."
+            ],
+            "indications": []
+        },
+        {
+            "code": "9",
+            "name": "PSA Prostático",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Detección del antígeno prostático específico.",
+            "requirements": [
+                "Evitar actividad sexual 48 horas antes.",
+                "No realizar ciclismo 48 horas antes."
+            ],
+            "indications": []
+        },
+        {
+            "code": "10",
+            "name": "VDRL (Sífilis)",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Detección de sífilis.",
+            "requirements": [
+                "No requiere ayuno."
+            ],
+            "indications": []
+        },
+        {
+            "code": "24",
+            "name": "Coprocultivo",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Análisis bacteriológico de las heces.",
+            "requirements": [
+                "Muestra fresca en frasco estéril.",
+                "No tomar antibióticos 3 días antes."
+            ],
+            "indications": []
+        },
+        {
+            "code": "25",
+            "name": "Urocultivo",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Cultivo de orina para detectar infecciones.",
+            "requirements": [
+                "Primera orina de la mañana.",
+                "Aseo genital previo.",
+                "Frasco estéril."
+            ],
+            "indications": []
+        },
+        {
+            "code": "26",
+            "name": "Prueba de Embarazo (Sangre)",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Detección de hormona hCG en sangre.",
+            "requirements": [
+                "No requiere ayuno estricto."
+            ],
+            "indications": []
+        },
+        {
+            "code": "27",
+            "name": "Vitamina D",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Medición de niveles de vitamina D en sangre.",
+            "requirements": [
+                "Ayuno de 4 horas."
+            ],
+            "indications": []
+        },
+        {
+            "code": "28",
+            "name": "Perfil Tiroideo Completo",
+            "category": "Laboratorio Clínico",
+            "duration": "30 minutos",
+            "description": "Evalúa TSH, T3 y T4.",
+            "requirements": [
+                "No requiere ayuno."
+            ],
+            "indications": []
+        }
+    ],
+    "branches": [
+        {
+            "id": "AH-001",
+            "name": "Lab Ahuachapán Norte",
+            "city": "Ahuachapán",
+            "address": "Avenida Menéndez, Ahuachapán",
+            "phone": "2413-9999",
+            "coordinates": {
+                "lat": 13.9214,
+                "lng": -89.8452
+            }
+        },
+        {
+            "id": "AC-001",
+            "name": "Lab Antiguo Cuscatlán",
+            "city": "Antiguo Cuscatlán",
+            "address": "Boulevard Merliot, Antiguo Cuscatlán",
+            "phone": "2243-0010",
+            "coordinates": {
+                "lat": 13.6667,
+                "lng": -89.2500
+            }
+        },
+        {
+            "id": "APO-001",
+            "name": "Lab Apopa Norte",
+            "city": "Apopa",
+            "address": "Boulevard 25 de Julio, Apopa",
+            "phone": "2221-0009",
+            "coordinates": {
+                "lat": 13.8072,
+                "lng": -89.1792
+            }
+        },
+        {
+            "id": "AYU-001",
+            "name": "Lab Ayutuxtepeque",
+            "city": "Ayutuxtepeque",
+            "address": "Avenida Las Palmeras, Ayutuxtepeque",
+            "phone": "2225-0015",
+            "coordinates": {
+                "lat": 13.7458,
+                "lng": -89.2064
+            }
+        },
+        {
+            "id": "CAB-001",
+            "name": "Lab Cabañas Regional",
+            "city": "Sensuntepeque",
+            "address": "Barrio San José, Sensuntepeque",
+            "phone": "2380-0006",
+            "coordinates": {
+                "lat": 13.8667,
+                "lng": -88.6333
+            }
+        },
+        {
+            "id": "CHA-001",
+            "name": "Lab Chalatenango Norte",
+            "city": "Chalatenango",
+            "address": "Barrio El Centro, Chalatenango",
+            "phone": "2301-0003",
+            "coordinates": {
+                "lat": 14.0333,
+                "lng": -88.9333
+            }
+        },
+        {
+            "id": "SS-001",
+            "name": "Lab Clínico San Salvador Centro",
+            "city": "San Salvador",
+            "address": "Avenida España, Colonia Roma, San Salvador",
+            "phone": "2222-1111",
+            "coordinates": {
+                "lat": 13.6929,
+                "lng": -89.2182
+            }
+        },
+        {
+            "id": "SA-001",
+            "name": "Lab Santa Ana Centro",
+            "city": "Santa Ana",
+            "address": "Avenida Independencia Sur, Santa Ana",
+            "phone": "2440-5555",
+            "coordinates": {
+                "lat": 13.9942,
+                "lng": -89.5598
+            }
+        },
+        {
+            "id": "SM-001",
+            "name": "Lab San Miguel Plaza",
+            "city": "San Miguel",
+            "address": "Avenida Roosevelt, San Miguel",
+            "phone": "2661-6666",
+            "coordinates": {
+                "lat": 13.4833,
+                "lng": -88.1833
+            }
+        },
+        {
+            "id": "MEJ-001",
+            "name": "Lab Clínico Mejicanos",
+            "city": "Mejicanos",
+            "address": "Calle Principal, Mejicanos",
+            "phone": "2226-4444",
+            "coordinates": {
+                "lat": 13.7401,
+                "lng": -89.2124
+            }
+        },
+        {
+            "id": "CUS-001",
+            "name": "Lab Cuscatlán Central",
+            "city": "Cojutepeque",
+            "address": "Calle Morazán, Cojutepeque",
+            "phone": "2372-0004",
+            "coordinates": {
+                "lat": 13.7167,
+                "lng": -88.9333
+            }
+        },
+        {
+            "id": "DEL-001",
+            "name": "Lab Delgado Oriente",
+            "city": "Ciudad Delgado",
+            "address": "Final Calle Principal, Ciudad Delgado",
+            "phone": "2224-0014",
+            "coordinates": {
+                "lat": 13.7333,
+                "lng": -89.1667
+            }
+        },
+        {
+            "id": "SOY-001",
+            "name": "Lab Diagnóstico Soyapango",
+            "city": "Soyapango",
+            "address": "Avenida Las Victorias, Soyapango",
+            "phone": "2227-3333",
+            "coordinates": {
+                "lat": 13.7099,
+                "lng": -89.1397
+            }
+        },
+        {
+            "id": "ESC-001",
+            "name": "Lab Escalón San Salvador",
+            "city": "San Salvador",
+            "address": "Paseo General Escalón, Colonia Escalón",
+            "phone": "2264-0016",
+            "coordinates": {
+                "lat": 13.7000,
+                "lng": -89.2333
+            }
+        },
+        {
+            "id": "ILO-001",
+            "name": "Lab Ilopango Este",
+            "city": "Ilopango",
+            "address": "Avenida Ilopango, Ilopango",
+            "phone": "2295-0011",
+            "coordinates": {
+                "lat": 13.7019,
+                "lng": -89.1097
+            }
+        },
+        {
+            "id": "LL-001",
+            "name": "Lab La Libertad Playa",
+            "city": "La Libertad",
+            "address": "Boulevard del Hipódromo, La Libertad",
+            "phone": "2335-0002",
+            "coordinates": {
+                "lat": 13.4883,
+                "lng": -89.3223
+            }
+        },
+        {
+            "id": "LP-001",
+            "name": "Lab La Paz Centro",
+            "city": "Zacatecoluca",
+            "address": "Avenida José Simeón Cañas, Zacatecoluca",
+            "phone": "2334-0005",
+            "coordinates": {
+                "lat": 13.5000,
+                "lng": -88.8667
+            }
+        },
+        {
+            "id": "LU-001",
+            "name": "Lab La Unión Costa",
+            "city": "La Unión",
+            "address": "Avenida General Cabañas, La Unión",
+            "phone": "2604-8888",
+            "coordinates": {
+                "lat": 13.3367,
+                "lng": -87.8439
+            }
+        },
+        {
+            "id": "ST-001",
+            "name": "Lab Médico Santa Tecla",
+            "city": "Santa Tecla",
+            "address": "Boulevard Los Próceres, Santa Tecla",
+            "phone": "2228-2222",
+            "coordinates": {
+                "lat": 13.6769,
+                "lng": -89.2799
+            }
+        },
+        {
+            "id": "USU-001",
+            "name": "Lab Médico Usulután",
+            "city": "Usulután",
+            "address": "Calle Grimaldi, Usulután",
+            "phone": "2662-7777",
+            "coordinates": {
+                "lat": 13.3450,
+                "lng": -88.4333
+            }
+        },
+        {
+            "id": "MET-001",
+            "name": "Lab Metapán Occidente",
+            "city": "Metapán",
+            "address": "Calle 15 de Septiembre, Metapán",
+            "phone": "2442-0012",
+            "coordinates": {
+                "lat": 14.3333,
+                "lng": -89.4500
+            }
+        },
+        {
+            "id": "MOR-001",
+            "name": "Lab Morazán Frontera",
+            "city": "San Francisco Gotera",
+            "address": "Calle Principal, San Francisco Gotera",
+            "phone": "2654-0008",
+            "coordinates": {
+                "lat": 13.7000,
+                "lng": -88.1000
+            }
+        },
+        {
+            "id": "SV-001",
+            "name": "Lab San Vicente Centro",
+            "city": "San Vicente",
+            "address": "Calle Dr. Miguel Tomás Molina, San Vicente",
+            "phone": "2393-0007",
+            "coordinates": {
+                "lat": 13.6333,
+                "lng": -88.7833
+            }
+        },
+        {
+            "id": "SON-001",
+            "name": "Lab Sonsonate Centro",
+            "city": "Sonsonate",
+            "address": "Calle Obispo Marroquín, Sonsonate",
+            "phone": "2451-0001",
+            "coordinates": {
+                "lat": 13.7186,
+                "lng": -89.7241
+            }
+        },
+        {
+            "id": "ZAC-001",
+            "name": "Lab Zacamil Norte",
+            "city": "Mejicanos",
+            "address": "Calle Principal, Zacamil, Mejicanos",
+            "phone": "2220-0013",
+            "coordinates": {
+                "lat": 13.7333,
+                "lng": -89.2000
+            }
+        }
+    ],
+    "company": {
+        "name": "LABORATORIOS ANALIZA – CogniLatino",
+        "contact": {
+            "phone": "+503 2222-0000",
+            "email": "contacto@analisa-sv.com",
+            "website": "www.analiza-sv.com",
+            "address": "Avenida Médica #45, San Salvador, El Salvador"
+        },
+        "hours": {
+            "weekdays": "7:00–18:00",
+            "saturday": "7:00–12:00"
+        },
+        "services": [
+            "Análisis clínicos",
+            "Imágenes diagnósticas",
+            "Exámenes de laboratorio especializados",
+            "Atención a pacientes con código GES"
+        ]
+    },
+    "policies": [
+        {
+            "id": "1",
+            "title": "Información General de la Empresa",
+            "content": "Laboratorios Analisa – CogniLatino es una red de laboratorios clínicos y centros de diagnóstico.",
+            "details": [
+                "Ofrece servicios de: Análisis clínicos, Estudios de imagen, Exámenes especializados, Servicios para programas GES.",
+                "Brindamos atención a pacientes privados y a pacientes con cobertura gubernamental."
+            ]
+        },
+        {
+            "id": "2",
+            "title": "Política de Atención al Cliente",
+            "content": "Compromiso con un trato profesional, respetuoso y amable.",
+            "details": [
+                "Todas las consultas serán atendidas en orden de llegada, salvo emergencias.",
+                "Los tiempos de espera pueden variar según la demanda.",
+                "Compromiso de entrega de resultados dentro de los plazos establecidos."
+            ]
+        },
+        {
+            "id": "3",
+            "title": "Política de Identificación del Paciente",
+            "content": "Requisitos obligatorios para acceder a cualquier servicio.",
+            "details": [
+                "Documento de identidad válido (DUI, pasaporte o equivalente).",
+                "Código GES válido (cuando aplique).",
+                "Sin identificación o código válido, no se puede agendar ni realizar exámenes."
+            ]
+        },
+        {
+            "id": "4",
+            "title": "Política de Citas y Agendamiento",
+            "content": "Normas para reservas, puntualidad, reprogramaciones y cancelaciones.",
+            "details": [
+                "Reservas: Deben agendarse con anticipación y son válidas solo con confirmación.",
+                "Puntualidad: Llegar 15 minutos antes. Retraso > 10 min puede causar reprogramación.",
+                "Reprogramaciones: Sin costo hasta 24 horas antes. Mismo día sujeto a disponibilidad.",
+                "Cancelaciones: Se recomienda cancelar con anticipación para evitar congestión."
+            ]
+        },
+        {
+            "id": "5",
+            "title": "Política de Preparación de Exámenes",
+            "content": "Requisitos específicos para la realización de exámenes.",
+            "details": [
+                "Algunos estudios requieren ayuno de 8 a 12 horas.",
+                "Algunos requieren ropa cómoda o sin metal.",
+                "Todos requieren documento de identidad.",
+                "El incumplimiento puede derivar en la negación del servicio para evitar errores."
+            ]
+        },
+        {
+            "id": "6",
+            "title": "Política de Resultados",
+            "content": "Entrega y consulta de resultados.",
+            "details": [
+                "Disponibles en el plazo estándar de cada examen.",
+                "Retiro en sucursal o consulta digital (si disponible).",
+                "Entrega solo al paciente o representante con DUI.",
+                "No se entregan resultados por teléfono."
+            ]
+        },
+        {
+            "id": "7",
+            "title": "Política de Pagos",
+            "content": "Métodos y condiciones de pago.",
+            "details": [
+                "Pacientes privados deben cancelar antes del examen.",
+                "Pacientes GES tienen cobertura con código válido.",
+                "No se aceptan pagos fraccionados.",
+                "Aceptamos: efectivo, tarjeta de débito, tarjeta de crédito."
+            ]
+        },
+        {
+            "id": "8",
+            "title": "Política de Privacidad y Protección de Datos",
+            "content": "Manejo confidencial de la información del paciente.",
+            "details": [
+                "Cumplimiento de normativas de protección de datos.",
+                "Información confidencial, no compartida sin consentimiento.",
+                "Historiales resguardados en sistemas seguros.",
+                "Llamadas pueden ser monitoreadas por calidad y seguridad."
+            ]
+        },
+        {
+            "id": "9",
+            "title": "Política de Reclamaciones",
+            "content": "Canales y tiempos para presentar quejas o reclamos.",
+            "details": [
+                "Motivos: Demoras, errores, problemas de citas, inconformidad.",
+                "Canales: Teléfono, Correo electrónico, Presencial.",
+                "Respuesta formal en máximo 72 horas."
+            ]
+        },
+        {
+            "id": "10",
+            "title": "Política de Seguridad Clínica",
+            "content": "Protocolos de seguridad y personal acreditado.",
+            "details": [
+                "Protocolos estandarizados.",
+                "Personal acreditado.",
+                "Posible posposición en caso de contraindicaciones médicas."
+            ]
+        },
+        {
+            "id": "11",
+            "title": "Política de Menores de Edad",
+            "content": "Requisitos para la atención de menores.",
+            "details": [
+                "Deben asistir acompañados de padre, madre o tutor legal.",
+                "Presentar documento de identidad del menor y del acompañante."
+            ]
+        },
+        {
+            "id": "12",
+            "title": "Política de Objetos Personales",
+            "content": "Responsabilidad sobre pertenencias.",
+            "details": [
+                "El laboratorio no se hace responsable por pérdida de objetos de valor.",
+                "Se recomienda no traer objetos innecesarios."
+            ]
+        }
+    ],
+    "faq": [
+        {
+            "question": "¿Necesito presentar algún documento para realizarme un examen?",
+            "answer": "Sí. Todos los pacientes deben presentar un documento de identidad válido (DUI, pasaporte o equivalente). Los pacientes con cobertura GES deben presentar, además, un código GES válido y verificable.",
+            "keywords": [
+                "documento",
+                "identidad",
+                "dui",
+                "pasaporte",
+                "ges",
+                "requisitos"
+            ]
+        },
+        {
+            "question": "¿Qué pasa si no tengo mi código GES?",
+            "answer": "No podemos agendar ni realizar exámenes GES sin el código correspondiente. Debe obtenerlo previamente a través de su unidad de salud o institución correspondiente.",
+            "keywords": [
+                "código ges",
+                "ges",
+                "sin código"
+            ]
+        },
+        {
+            "question": "¿Debo estar en ayunas para los exámenes de sangre?",
+            "answer": "Depende del examen. Los estudios más comunes requieren ayuno de 8 a 12 horas, pero algunos no lo requieren. El asistente le informará según el examen que usted necesite.",
+            "keywords": [
+                "ayuno",
+                "sangre",
+                "preparación"
+            ]
+        },
+        {
+            "question": "¿Qué exámenes requieren ayuno?",
+            "answer": "Generalmente: Perfil lipídico, Glucosa en ayunas, Pruebas metabólicas, Ultrasonido abdominal. El asistente verificará los requisitos exactos según su examen.",
+            "keywords": [
+                "ayuno",
+                "exámenes",
+                "cuales"
+            ]
+        },
+        {
+            "question": "¿Puedo tomar agua durante el ayuno?",
+            "answer": "Sí. En la mayoría de casos puede beber agua pura, pero no puede consumir alimentos, café, té, bebidas azucaradas ni alcohol.",
+            "keywords": [
+                "agua",
+                "ayuno",
+                "beber"
+            ]
+        },
+        {
+            "question": "¿Qué pasa si llego tarde a mi cita?",
+            "answer": "Un retraso mayor de 10 minutos puede causar la reprogramación automática de su cita, dependiendo de la disponibilidad del día. Se recomienda llegar con 15 minutos de anticipación.",
+            "keywords": [
+                "tarde",
+                "retraso",
+                "llegada",
+                "puntualidad"
+            ]
+        },
+        {
+            "question": "¿Puedo reprogramar mi cita?",
+            "answer": "Sí. Las citas pueden reprogramarse sin costo, idealmente con 24 horas de anticipación. Las reprogramaciones en el mismo día dependen de disponibilidad.",
+            "keywords": [
+                "reprogramar",
+                "cambiar cita",
+                "costo"
+            ]
+        },
+        {
+            "question": "¿Puedo cancelar mi cita?",
+            "answer": "Sí, puede cancelarla en cualquier momento. Si desea reagendar, se le ofrecerán las fechas disponibles de inmediato.",
+            "keywords": [
+                "cancelar",
+                "anular"
+            ]
+        },
+        {
+            "question": "¿Puedo asistir sin cita previa?",
+            "answer": "Para evitar tiempos de espera prolongados, se recomienda siempre programar una cita. Algunas sucursales pueden aceptar pacientes sin cita, dependiendo de la disponibilidad.",
+            "keywords": [
+                "sin cita",
+                "cita previa",
+                "walk-in"
+            ]
+        },
+        {
+            "question": "¿Cuánto tardan los resultados?",
+            "answer": "Depende del tipo de examen. Exámenes básicos: 24-48 horas. Estudios especializados: 2-5 días. Imágenes: mismo día o 24 horas.",
+            "keywords": [
+                "tiempo",
+                "resultados",
+                "tardan",
+                "entrega"
+            ]
+        },
+        {
+            "question": "¿Cómo puedo recoger mis resultados?",
+            "answer": "Puede recogerlos en cualquiera de nuestras sucursales (con documento de identidad) o a través de nuestra plataforma digital (si está habilitado). No entregamos resultados por teléfono.",
+            "keywords": [
+                "recoger",
+                "resultados",
+                "donde",
+                "digital"
+            ]
+        },
+        {
+            "question": "¿Las pruebas son dolorosas?",
+            "answer": "La mayoría no son dolorosas. Los análisis de sangre pueden causar una pequeña molestia. Los estudios de imagen suelen ser indoloros.",
+            "keywords": [
+                "dolor",
+                "dolorosas",
+                "molestia"
+            ]
+        },
+        {
+            "question": "¿Puedo acudir si estoy embarazada?",
+            "answer": "En la mayoría de exámenes sí, pero ciertos estudios como rayos X requieren precaución o autorización médica.",
+            "keywords": [
+                "embarazada",
+                "embarazo",
+                "rayos x"
+            ]
+        },
+        {
+            "question": "¿Puedo ir acompañado?",
+            "answer": "Sí. Los pacientes pueden asistir con un acompañante, salvo indicación específica del examen.",
+            "keywords": [
+                "acompañante",
+                "acompañado",
+                "solo"
+            ]
+        },
+        {
+            "question": "¿Qué formas de pago aceptan?",
+            "answer": "Efectivo, Tarjeta de débito, Tarjeta de crédito, Cobertura GES (con código válido).",
+            "keywords": [
+                "pago",
+                "tarjeta",
+                "efectivo",
+                "cobro"
+            ]
+        },
+        {
+            "question": "¿Puedo realizarme un examen el mismo día que lo solicito?",
+            "answer": "Depende de la disponibilidad y preparación previa (como ayuno).",
+            "keywords": [
+                "mismo día",
+                "hoy",
+                "inmediato"
+            ]
+        },
+        {
+            "question": "¿Qué pasa si no cumplo los requisitos del examen?",
+            "answer": "El laboratorio podría no realizar el examen para evitar resultados incorrectos. Se le reprogramará o indicarán los pasos necesarios.",
+            "keywords": [
+                "requisitos",
+                "cumplo",
+                "preparación"
+            ]
+        },
+        {
+            "question": "¿Puedo solicitar una segunda copia de mis resultados?",
+            "answer": "Sí, se puede solicitar una copia adicional en sucursal, presentando documento de identidad.",
+            "keywords": [
+                "copia",
+                "resultados",
+                "duplicado"
+            ]
+        },
+        {
+            "question": "¿Qué debo hacer si tengo una emergencia médica?",
+            "answer": "El laboratorio no atiende emergencias médicas. Debe acudir directamente a un hospital o centro de atención de urgencias.",
+            "keywords": [
+                "emergencia",
+                "urgencia"
+            ]
+        },
+        {
+            "question": "¿Cómo presento una queja o reclamo?",
+            "answer": "Puede hacerlo por teléfono, correo electrónico o presencial en sucursal. Se responde en máximo 72 horas.",
+            "keywords": [
+                "queja",
+                "reclamo",
+                "inconformidad"
+            ]
+        }
+    ],
+    "personnel": [
+        {
+            "name": "Dra. María Fernanda Villalobos",
+            "role": "Médico Especialista",
+            "specialty": "Medicina General / Diagnóstico Clínico",
+            "branch": "Centro",
+            "experience": "12 años",
+            "description": "Reconocida por su trato cercano y claro al explicar procedimientos. Muy recomendada para pacientes nerviosos o en su primer examen."
+        },
+        {
+            "name": "Dr. José Alberto Ramírez",
+            "role": "Médico Especialista",
+            "specialty": "Bioquímica Clínica / Hematología",
+            "branch": "Escalón",
+            "experience": "15 años",
+            "description": "Experto en exámenes de sangre especializados. Tiene un enfoque calmado y técnico, ideal para estudios de laboratorio complejos."
+        },
+        {
+            "name": "Dra. Karla Sofía Mendoza",
+            "role": "Médico Especialista",
+            "specialty": "Medicina General / Programas GES",
+            "branch": "Santa Elena",
+            "experience": "10 años",
+            "description": "Amplia experiencia en manejo de pacientes del programa GES. Trato amable y eficiente."
+        },
+        {
+            "name": "Lic. Ricardo Antonio Díaz",
+            "role": "Técnico de Diagnóstico",
+            "specialty": "Radiología (Rayos X)",
+            "branch": "Centro",
+            "experience": "8 años",
+            "description": "Técnico dedicado, excelente manejo de equipos de rayos X y preparación del paciente."
+        },
+        {
+            "name": "Licda. Alejandra Campos",
+            "role": "Técnico de Diagnóstico",
+            "specialty": "Ultrasonografía",
+            "branch": "Escalón",
+            "experience": "6 años",
+            "description": "Especialista en ultrasonido abdominal y pélvico. Muy cuidadosa al explicar cada paso del procedimiento."
+        }
+    ]
+}

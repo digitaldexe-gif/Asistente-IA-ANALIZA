@@ -1,0 +1,320 @@
+[
+    {
+        "id": "EVT-9001",
+        "patientId": "P-1001",
+        "eventType": "appointment_created",
+        "timestamp": "2024-01-10T15:30:00Z",
+        "details": {
+            "appointmentId": "APT-5001",
+            "exam": "Hemograma Completo"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9002",
+        "patientId": "P-1001",
+        "eventType": "info_query",
+        "timestamp": "2024-01-14T09:00:00Z",
+        "details": {
+            "query": "Requisitos para hemograma"
+        },
+        "source": "ai_assistant"
+    },
+    {
+        "id": "EVT-9003",
+        "patientId": "P-1002",
+        "eventType": "appointment_created",
+        "timestamp": "2024-02-18T11:20:00Z",
+        "details": {
+            "appointmentId": "APT-5002",
+            "exam": "Ecografía Abdominal"
+        },
+        "source": "n8n"
+    },
+    {
+        "id": "EVT-9004",
+        "patientId": "P-1003",
+        "eventType": "appointment_cancelled",
+        "timestamp": "2024-03-04T16:45:00Z",
+        "details": {
+            "appointmentId": "APT-5003",
+            "reason": "Patient request"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9005",
+        "patientId": "P-1004",
+        "eventType": "appointment_created",
+        "timestamp": "2024-05-10T10:00:00Z",
+        "details": {
+            "appointmentId": "APT-5005",
+            "exam": "Ecografía Obstétrica"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9006",
+        "patientId": "P-1005",
+        "eventType": "results_viewed",
+        "timestamp": "2024-06-02T14:30:00Z",
+        "details": {
+            "appointmentId": "APT-5006",
+            "exam": "Perfil Lipídico"
+        },
+        "source": "patient_portal"
+    },
+    {
+        "id": "EVT-9007",
+        "patientId": "P-1006",
+        "eventType": "info_query",
+        "timestamp": "2024-06-04T09:15:00Z",
+        "details": {
+            "query": "Precio TSH"
+        },
+        "source": "ai_assistant"
+    },
+    {
+        "id": "EVT-9008",
+        "patientId": "P-1007",
+        "eventType": "appointment_rescheduled",
+        "timestamp": "2024-06-08T11:00:00Z",
+        "details": {
+            "appointmentId": "APT-5008",
+            "oldDate": "2024-06-09T10:00:00Z",
+            "newDate": "2024-06-10T11:00:00Z"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9009",
+        "patientId": "P-1008",
+        "eventType": "check_in",
+        "timestamp": "2024-06-12T14:50:00Z",
+        "details": {
+            "branch": "Escalón"
+        },
+        "source": "kiosk"
+    },
+    {
+        "id": "EVT-9010",
+        "patientId": "P-1009",
+        "eventType": "appointment_created",
+        "timestamp": "2024-06-14T08:00:00Z",
+        "details": {
+            "appointmentId": "APT-5010",
+            "exam": "PSA Prostático"
+        },
+        "source": "n8n"
+    },
+    {
+        "id": "EVT-9011",
+        "patientId": "P-1010",
+        "eventType": "results_ready",
+        "timestamp": "2024-06-19T16:00:00Z",
+        "details": {
+            "appointmentId": "APT-5011"
+        },
+        "source": "system"
+    },
+    {
+        "id": "EVT-9012",
+        "patientId": "P-1011",
+        "eventType": "appointment_created",
+        "timestamp": "2024-06-18T09:30:00Z",
+        "details": {
+            "appointmentId": "APT-5012",
+            "exam": "Ecocardiograma"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9013",
+        "patientId": "P-1012",
+        "eventType": "appointment_cancelled",
+        "timestamp": "2024-06-21T08:00:00Z",
+        "details": {
+            "appointmentId": "APT-5013",
+            "reason": "No show"
+        },
+        "source": "system"
+    },
+    {
+        "id": "EVT-9014",
+        "patientId": "P-1013",
+        "eventType": "info_query",
+        "timestamp": "2024-06-24T13:20:00Z",
+        "details": {
+            "query": "Preparación radiografía tórax"
+        },
+        "source": "ai_assistant"
+    },
+    {
+        "id": "EVT-9015",
+        "patientId": "P-1014",
+        "eventType": "check_in",
+        "timestamp": "2024-06-28T07:40:00Z",
+        "details": {
+            "branch": "Ahuachapán"
+        },
+        "source": "reception"
+    },
+    {
+        "id": "EVT-9016",
+        "patientId": "P-1015",
+        "eventType": "appointment_created",
+        "timestamp": "2024-06-30T10:00:00Z",
+        "details": {
+            "appointmentId": "APT-5016",
+            "exam": "Prueba de Esfuerzo"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9017",
+        "patientId": "P-1016",
+        "eventType": "reminder_sent",
+        "timestamp": "2024-07-02T09:00:00Z",
+        "details": {
+            "method": "whatsapp",
+            "appointmentId": "APT-5017"
+        },
+        "source": "system"
+    },
+    {
+        "id": "EVT-9018",
+        "patientId": "P-1017",
+        "eventType": "results_viewed",
+        "timestamp": "2024-07-06T11:00:00Z",
+        "details": {
+            "appointmentId": "APT-5018"
+        },
+        "source": "patient_portal"
+    },
+    {
+        "id": "EVT-9019",
+        "patientId": "P-1018",
+        "eventType": "appointment_created",
+        "timestamp": "2024-07-05T15:30:00Z",
+        "details": {
+            "appointmentId": "APT-5019",
+            "exam": "Ecografía Abdominal"
+        },
+        "source": "n8n"
+    },
+    {
+        "id": "EVT-9020",
+        "patientId": "P-1019",
+        "eventType": "info_query",
+        "timestamp": "2024-07-09T08:45:00Z",
+        "details": {
+            "query": "Horario Santa Tecla"
+        },
+        "source": "ai_assistant"
+    },
+    {
+        "id": "EVT-9021",
+        "patientId": "P-1020",
+        "eventType": "appointment_cancelled",
+        "timestamp": "2024-07-11T17:00:00Z",
+        "details": {
+            "appointmentId": "APT-5021",
+            "reason": "Medical contraindication"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9022",
+        "patientId": "P-1021",
+        "eventType": "results_ready",
+        "timestamp": "2024-07-16T10:00:00Z",
+        "details": {
+            "appointmentId": "APT-5022"
+        },
+        "source": "system"
+    },
+    {
+        "id": "EVT-9023",
+        "patientId": "P-1022",
+        "eventType": "appointment_created",
+        "timestamp": "2024-07-15T14:00:00Z",
+        "details": {
+            "appointmentId": "APT-5023",
+            "exam": "Prueba de Embarazo"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9024",
+        "patientId": "P-1023",
+        "eventType": "reminder_sent",
+        "timestamp": "2024-07-19T09:00:00Z",
+        "details": {
+            "method": "sms",
+            "appointmentId": "APT-5024"
+        },
+        "source": "system"
+    },
+    {
+        "id": "EVT-9025",
+        "patientId": "P-1024",
+        "eventType": "appointment_created",
+        "timestamp": "2024-07-20T11:30:00Z",
+        "details": {
+            "appointmentId": "APT-5025",
+            "exam": "Resonancia Magnética"
+        },
+        "source": "manual"
+    },
+    {
+        "id": "EVT-9026",
+        "patientId": "P-1025",
+        "eventType": "check_in",
+        "timestamp": "2024-07-25T08:40:00Z",
+        "details": {
+            "branch": "Mejicanos"
+        },
+        "source": "reception"
+    },
+    {
+        "id": "EVT-9027",
+        "patientId": "P-1026",
+        "eventType": "info_query",
+        "timestamp": "2024-07-26T16:15:00Z",
+        "details": {
+            "query": "Costo Vitamina D"
+        },
+        "source": "ai_assistant"
+    },
+    {
+        "id": "EVT-9028",
+        "patientId": "P-1001",
+        "eventType": "login",
+        "timestamp": "2024-08-01T09:00:00Z",
+        "details": {
+            "platform": "web"
+        },
+        "source": "auth_service"
+    },
+    {
+        "id": "EVT-9029",
+        "patientId": "P-1002",
+        "eventType": "profile_update",
+        "timestamp": "2024-08-02T10:30:00Z",
+        "details": {
+            "field": "phone"
+        },
+        "source": "patient_portal"
+    },
+    {
+        "id": "EVT-9030",
+        "patientId": "P-1005",
+        "eventType": "payment_processed",
+        "timestamp": "2024-06-01T08:05:00Z",
+        "details": {
+            "amount": 45.00,
+            "method": "credit_card"
+        },
+        "source": "billing"
+    }
+]

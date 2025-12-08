@@ -1,0 +1,210 @@
+[
+    {
+        "id": "P-1001",
+        "name": "Juan Pérez",
+        "phone": "+50370001111",
+        "email": "juan.perez@email.com",
+        "dob": "1985-05-15",
+        "gender": "M"
+    },
+    {
+        "id": "P-1002",
+        "name": "María Rodríguez",
+        "phone": "+50370002222",
+        "email": "maria.rodriguez@email.com",
+        "dob": "1990-11-20",
+        "gender": "F"
+    },
+    {
+        "id": "P-1003",
+        "name": "Carlos López",
+        "phone": "+50370003333",
+        "email": "carlos.lopez@email.com",
+        "dob": "1978-02-10",
+        "gender": "M"
+    },
+    {
+        "id": "P-1004",
+        "name": "Ana Martínez",
+        "phone": "+50370004444",
+        "email": "ana.martinez@email.com",
+        "dob": "1995-08-30",
+        "gender": "F"
+    },
+    {
+        "id": "P-1005",
+        "name": "Luis González",
+        "phone": "+50370005555",
+        "email": "luis.gonzalez@email.com",
+        "dob": "1982-12-05",
+        "gender": "M"
+    },
+    {
+        "id": "P-1006",
+        "name": "Sofía Hernández",
+        "phone": "+50370006666",
+        "email": "sofia.hernandez@email.com",
+        "dob": "1992-03-25",
+        "gender": "F"
+    },
+    {
+        "id": "P-1007",
+        "name": "Miguel Ángel Torres",
+        "phone": "+50370007777",
+        "email": "miguel.torres@email.com",
+        "dob": "1980-07-14",
+        "gender": "M"
+    },
+    {
+        "id": "P-1008",
+        "name": "Lucía Ramírez",
+        "phone": "+50370008888",
+        "email": "lucia.ramirez@email.com",
+        "dob": "1988-09-09",
+        "gender": "F"
+    },
+    {
+        "id": "P-1009",
+        "name": "Fernando Castro",
+        "phone": "+50370009999",
+        "email": "fernando.castro@email.com",
+        "dob": "1975-01-30",
+        "gender": "M"
+    },
+    {
+        "id": "P-1010",
+        "name": "Elena Flores",
+        "phone": "+50370010000",
+        "email": "elena.flores@email.com",
+        "dob": "1998-06-12",
+        "gender": "F"
+    },
+    {
+        "id": "P-1011",
+        "name": "Roberto Sánchez",
+        "phone": "+50370011111",
+        "email": "roberto.sanchez@email.com",
+        "dob": "1983-10-05",
+        "gender": "M"
+    },
+    {
+        "id": "P-1012",
+        "name": "Patricia Lima",
+        "phone": "+50370012222",
+        "email": "patricia.lima@email.com",
+        "dob": "1991-04-18",
+        "gender": "F"
+    },
+    {
+        "id": "P-1013",
+        "name": "Jorge Ruiz",
+        "phone": "+50370013333",
+        "email": "jorge.ruiz@email.com",
+        "dob": "1979-12-22",
+        "gender": "M"
+    },
+    {
+        "id": "P-1014",
+        "name": "Carmen Morales",
+        "phone": "+50370014444",
+        "email": "carmen.morales@email.com",
+        "dob": "1986-02-28",
+        "gender": "F"
+    },
+    {
+        "id": "P-1015",
+        "name": "Ricardo Mendoza",
+        "phone": "+50370015555",
+        "email": "ricardo.mendoza@email.com",
+        "dob": "1993-08-15",
+        "gender": "M"
+    },
+    {
+        "id": "P-1016",
+        "name": "Gabriela Romero",
+        "phone": "+50370016666",
+        "email": "gabriela.romero@email.com",
+        "dob": "1996-11-03",
+        "gender": "F"
+    },
+    {
+        "id": "P-1017",
+        "name": "Alejandro Vargas",
+        "phone": "+50370017777",
+        "email": "alejandro.vargas@email.com",
+        "dob": "1981-05-20",
+        "gender": "M"
+    },
+    {
+        "id": "P-1018",
+        "name": "Daniela Ortiz",
+        "phone": "+50370018888",
+        "email": "daniela.ortiz@email.com",
+        "dob": "1994-01-10",
+        "gender": "F"
+    },
+    {
+        "id": "P-1019",
+        "name": "Héctor Silva",
+        "phone": "+50370019999",
+        "email": "hector.silva@email.com",
+        "dob": "1977-09-25",
+        "gender": "M"
+    },
+    {
+        "id": "P-1020",
+        "name": "Mónica Cruz",
+        "phone": "+50370020000",
+        "email": "monica.cruz@email.com",
+        "dob": "1989-03-15",
+        "gender": "F"
+    },
+    {
+        "id": "P-1021",
+        "name": "Andrés Mejía",
+        "phone": "+50370021111",
+        "email": "andres.mejia@email.com",
+        "dob": "1984-07-08",
+        "gender": "M"
+    },
+    {
+        "id": "P-1022",
+        "name": "Isabel Rivas",
+        "phone": "+50370022222",
+        "email": "isabel.rivas@email.com",
+        "dob": "1997-12-30",
+        "gender": "F"
+    },
+    {
+        "id": "P-1023",
+        "name": "Francisco Aguilar",
+        "phone": "+50370023333",
+        "email": "francisco.aguilar@email.com",
+        "dob": "1976-06-05",
+        "gender": "M"
+    },
+    {
+        "id": "P-1024",
+        "name": "Verónica Campos",
+        "phone": "+50370024444",
+        "email": "veronica.campos@email.com",
+        "dob": "1990-10-18",
+        "gender": "F"
+    },
+    {
+        "id": "P-1025",
+        "name": "Eduardo Castillo",
+        "phone": "+50370025555",
+        "email": "eduardo.castillo@email.com",
+        "dob": "1987-04-22",
+        "gender": "M"
+    },
+    {
+        "id": "P-1026",
+        "name": "Natalia Guzmán",
+        "phone": "+50370026666",
+        "email": "natalia.guzman@email.com",
+        "dob": "1999-02-14",
+        "gender": "F"
+    }
+]
