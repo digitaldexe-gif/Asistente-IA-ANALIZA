@@ -25,82 +25,53 @@ fastify.register(async (fastify) => {
         return { status: 'received', message: 'KB update logic not implemented yet' };
     });
 
-    // --- Unified KB Service ---
+    // --- Knowledge Base Service (Read-Only Reference Data) ---
     const kbService = new KbService();
 
-    // --- Public Endpoints (Frontend) ---
+    // --- KB Reference Data Endpoints ---
 
-    // Patients
-    fastify.get('/patients', async () => {
-        return kbService.getAllPatients();
+    // Get branches
+    fastify.get('/kb/branches', async (req: any) => {
+        const { city } = req.query;
+        return { branches: kbService.getBranches(city) };
     });
 
-    fastify.get('/patients/:id', async (req: any) => {
-        return kbService.getPatientById(req.params.id);
-    });
-
-    // Appointments
-    fastify.get('/appointments', async (req: any) => {
-        const { patientId } = req.query;
-        if (patientId) {
-            return kbService.getAppointmentsByPatientId(patientId);
+    // Get exam info
+    fastify.get('/kb/exams', async (req: any) => {
+        const { query } = req.query;
+        if (!query) {
+            return { exams: kbService.loadData().exams };
         }
-        return [];
+        return { exams: kbService.getExamInfo(query) };
     });
 
-    // History
-    fastify.get('/patient-history/:patientId', async (req: any, reply) => {
-        const { patientId } = req.params;
-        const history = kbService.getPatientHistory(patientId);
-        return { history };
+    // Get company info
+    fastify.get('/kb/company', async () => {
+        return kbService.getCompanyInfo();
     });
 
-    // --- Internal Endpoints (n8n) ---
+    // Get policies
+    fastify.get('/kb/policies', async (req: any) => {
+        const { keyword } = req.query;
+        return { policies: kbService.getPolicies(keyword) };
+    });
 
-    // Validate Patient (Check if exists by Phone or ID)
-    fastify.post('/internal/validate-patient', async (req: any) => {
-        const { phone, id } = req.body;
-        const patients = kbService.getAllPatients();
-
-        if (id) {
-            const p = patients.find((p: any) => p.id === id);
-            return { exists: !!p, patient: p || null };
+    // Get FAQ
+    fastify.get('/kb/faq', async (req: any) => {
+        const { query } = req.query;
+        if (!query) {
+            return { faqs: kbService.loadData().faq };
         }
-        if (phone) {
-            const p = patients.find((p: any) => p.phone === phone);
-            return { exists: !!p, patient: p || null };
-        }
-        return { exists: false, error: 'Provide id or phone' };
+        return { faqs: kbService.getFAQ(query) };
     });
 
-    // Create Patient
-    fastify.post('/internal/create-patient', async (req: any) => {
-        const patient = kbService.addPatient(req.body);
-        kbService.addHistoryEntry({
-            patientId: patient.id,
-            eventType: 'info_query',
-            details: { action: 'patient_created' },
-            source: 'n8n'
-        });
-        return patient;
-    });
-
-    // Log Event
-    fastify.post('/internal/log-event', async (req: any, reply) => {
-        const { patientId, eventType, details, source } = req.body;
-
-        if (!patientId || !eventType) {
-            return reply.code(400).send({ error: 'Missing required fields: patientId, eventType' });
+    // Search knowledge base
+    fastify.get('/kb/search', async (req: any) => {
+        const { query } = req.query;
+        if (!query) {
+            return { error: 'query parameter required' };
         }
-
-        const event = kbService.addHistoryEntry({
-            patientId,
-            eventType,
-            details: details || {},
-            source: source || 'n8n'
-        });
-
-        return { success: true, eventId: event.id };
+        return kbService.searchKnowledge(query);
     });
 });
 

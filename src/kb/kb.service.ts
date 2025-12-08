@@ -58,62 +58,25 @@ interface KbData {
     personnel: KbPersonnel[];
 }
 
-// Patient & Appointment Interfaces (Simplified for JSON storage)
-interface Patient {
-    id: string;
-    name: string;
-    phone: string;
-    email?: string;
-    dob?: string;
-    gender?: string;
-}
-
-interface Appointment {
-    id: string;
-    patientId: string;
-    examCode: string;
-    branchId: string;
-    date: string;
-    status: 'scheduled' | 'cancelled' | 'completed';
-}
-
-interface PatientHistoryEntry {
-    id: string;
-    patientId: string;
-    eventType: string;
-    timestamp: string;
-    details: any;
-    source: string;
-}
-
+/**
+ * KbService - Read-only Knowledge Base for reference data
+ * 
+ * This service provides access to static reference data (exams, branches, policies, FAQ).
+ * It does NOT handle patient data, appointments, or history.
+ * 
+ * For persistent data (patients, appointments, history), use PersistentMemoryService with Prisma.
+ */
 export class KbService {
     private readonly dataDir = path.join(process.cwd(), 'src', 'kb');
     private readonly kbPath = path.join(this.dataDir, 'kbdata.json');
-    private readonly patientsPath = path.join(this.dataDir, 'patients.json');
-    private readonly appointmentsPath = path.join(this.dataDir, 'appointments.json');
-    private readonly historyPath = path.join(this.dataDir, 'patientHistory.json');
 
     private kbData: KbData;
 
     constructor() {
-        // Ensure data directory exists
-        if (!fs.existsSync(this.dataDir)) {
-            fs.mkdirSync(this.dataDir, { recursive: true });
-        }
-
         this.kbData = this.loadKbData();
-        this.ensureFileExists(this.patientsPath, []);
-        this.ensureFileExists(this.appointmentsPath, []);
-        this.ensureFileExists(this.historyPath, []);
     }
 
-    // --- Helpers ---
-
-    private ensureFileExists(filePath: string, defaultContent: any) {
-        if (!fs.existsSync(filePath)) {
-            fs.writeFileSync(filePath, JSON.stringify(defaultContent, null, 2));
-        }
-    }
+    // --- Helper ---
 
     private loadKbData(): KbData {
         try {
@@ -129,25 +92,7 @@ export class KbService {
         }
     }
 
-    private readJson<T>(filePath: string): T {
-        try {
-            const data = fs.readFileSync(filePath, 'utf-8');
-            return JSON.parse(data);
-        } catch (error) {
-            console.error(`Error reading file ${filePath}:`, error);
-            return [] as any;
-        }
-    }
-
-    private writeJson(filePath: string, data: any) {
-        try {
-            fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-        } catch (error) {
-            console.error(`Error writing file ${filePath}:`, error);
-        }
-    }
-
-    // --- Knowledge Base Methods ---
+    // --- Knowledge Base Methods (Read-Only) ---
 
     loadData(): KbData {
         return this.kbData;
@@ -203,92 +148,5 @@ export class KbService {
                 (p.branch?.toLowerCase() || '').includes(normalizedQuery)
             )
         };
-    }
-
-    // --- Patient Methods ---
-
-    getAllPatients(): Patient[] {
-        return this.readJson<Patient[]>(this.patientsPath);
-    }
-
-    getPatientById(id: string): Patient | null {
-        const patients = this.getAllPatients();
-        return patients.find(p => p.id === id) || null;
-    }
-
-    addPatient(patient: Omit<Patient, 'id'>): Patient {
-        const patients = this.getAllPatients();
-        const newPatient = { ...patient, id: `P-${Date.now()}` };
-        patients.push(newPatient);
-        this.writeJson(this.patientsPath, patients);
-        return newPatient;
-    }
-
-    updatePatient(id: string, data: Partial<Patient>): Patient | null {
-        const patients = this.getAllPatients();
-        const index = patients.findIndex(p => p.id === id);
-        if (index === -1) return null;
-
-        patients[index] = { ...patients[index], ...data };
-        this.writeJson(this.patientsPath, patients);
-        return patients[index];
-    }
-
-    // --- Appointment Methods ---
-
-    getAppointmentsByPatientId(patientId: string): Appointment[] {
-        const appointments = this.readJson<Appointment[]>(this.appointmentsPath);
-        return appointments.filter(a => a.patientId === patientId);
-    }
-
-    addAppointment(appointment: Omit<Appointment, 'id' | 'status'>): Appointment {
-        const appointments = this.readJson<Appointment[]>(this.appointmentsPath);
-        const newAppointment: Appointment = {
-            ...appointment,
-            id: `APT-${Date.now()}`,
-            status: 'scheduled'
-        };
-        appointments.push(newAppointment);
-        this.writeJson(this.appointmentsPath, appointments);
-        return newAppointment;
-    }
-
-    updateAppointment(id: string, data: Partial<Appointment>): Appointment | null {
-        const appointments = this.readJson<Appointment[]>(this.appointmentsPath);
-        const index = appointments.findIndex(a => a.id === id);
-        if (index === -1) return null;
-
-        appointments[index] = { ...appointments[index], ...data };
-        this.writeJson(this.appointmentsPath, appointments);
-        return appointments[index];
-    }
-
-    cancelAppointment(id: string): boolean {
-        const appointments = this.readJson<Appointment[]>(this.appointmentsPath);
-        const index = appointments.findIndex(a => a.id === id);
-        if (index === -1) return false;
-
-        appointments[index].status = 'cancelled';
-        this.writeJson(this.appointmentsPath, appointments);
-        return true;
-    }
-
-    // --- History Methods ---
-
-    getPatientHistory(patientId: string): PatientHistoryEntry[] {
-        const history = this.readJson<PatientHistoryEntry[]>(this.historyPath);
-        return history.filter(h => h.patientId === patientId);
-    }
-
-    addHistoryEntry(entry: Omit<PatientHistoryEntry, 'id' | 'timestamp'>): PatientHistoryEntry {
-        const history = this.readJson<PatientHistoryEntry[]>(this.historyPath);
-        const newEntry: PatientHistoryEntry = {
-            ...entry,
-            id: `EVT-${Date.now()}`,
-            timestamp: new Date().toISOString()
-        };
-        history.push(newEntry);
-        this.writeJson(this.historyPath, history);
-        return newEntry;
     }
 }
