@@ -114,4 +114,31 @@ const start = async () => {
     }
 };
 
+// Graceful shutdown handlers for Railway
+const gracefulShutdown = async (signal: string) => {
+    console.log(`\n${signal} received, closing server gracefully...`);
+    try {
+        await fastify.close();
+        console.log('Server closed successfully');
+        process.exit(0);
+    } catch (err) {
+        console.error('Error during graceful shutdown:', err);
+        process.exit(1);
+    }
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Handle uncaught errors
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    gracefulShutdown('UNCAUGHT_EXCEPTION');
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    gracefulShutdown('UNHANDLED_REJECTION');
+});
+
 start();

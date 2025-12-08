@@ -1,17 +1,28 @@
 {
-  "name": "electric-glenn",
+  "name": "analiza-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "AI-powered backend for Laboratorios Analiza with OpenAI Realtime API integration",
   "main": "dist/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "postinstall": "prisma generate || true"
   },
-  "keywords": [],
+  "keywords": [
+    "openai",
+    "fastify",
+    "websocket",
+    "ai",
+    "healthcare"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@fastify/websocket": "^11.2.0",
     "@prisma/client": "5.10.0",
