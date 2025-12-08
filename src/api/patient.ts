@@ -117,6 +117,79 @@ export async function patientHandler(req: FastifyRequest, reply: FastifyReply) {
             });
         }
 
+        // SEARCH_PATIENT (dynamic search)
+        if (action === 'search_patient') {
+            const { goesCode, name, surname, phone } = params;
+
+            if (!goesCode && !name && !surname && !phone) {
+                return reply.code(400).send({
+                    success: false,
+                    error: 'At least one search parameter required: goesCode, name, surname, or phone'
+                });
+            }
+
+            // Build dynamic where clause
+            const whereClause: any = {};
+
+            if (goesCode) {
+                whereClause.primaryGoesCode = goesCode;
+            }
+
+            if (name) {
+                whereClause.name = {
+                    contains: name,
+                    mode: 'insensitive'
+                };
+            }
+
+            if (surname) {
+                whereClause.surname = {
+                    contains: surname,
+                    mode: 'insensitive'
+                };
+            }
+
+            // Search by phone in related table
+            let phoneFilter = {};
+            if (phone) {
+                phoneFilter = {
+                    phones: {
+                        some: {
+                            phoneNumber: {
+                                contains: phone
+                            }
+                        }
+                    }
+                };
+            }
+
+            const patients = await prisma.patient.findMany({
+                where: {
+                    ...whereClause,
+                    ...phoneFilter
+                },
+                include: {
+                    phones: true,
+                    profile: true,
+                    exams: {
+                        orderBy: { date: 'desc' },
+                        take: 10
+                    },
+                    history: {
+                        orderBy: { date: 'desc' },
+                        take: 5
+                    }
+                },
+                take: 50 // Limit results
+            });
+
+            return reply.code(200).send({
+                success: true,
+                data: patients,
+                count: patients.length
+            });
+        }
+
         // LIST_PATIENTS (optional - for admin)
         if (action === 'list_patients' || !action) {
             const patients = await prisma.patient.findMany({
@@ -137,7 +210,7 @@ export async function patientHandler(req: FastifyRequest, reply: FastifyReply) {
 
         return reply.code(400).send({
             success: false,
-            error: 'Invalid action. Supported: get_patient, create_patient, update_patient, list_patients'
+            error: 'Invalid action. Supported: get_patient, create_patient, update_patient, search_patient, list_patients'
         });
 
     } catch (error: any) {
