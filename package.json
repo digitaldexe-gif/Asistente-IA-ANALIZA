@@ -7,9 +7,6 @@
   "engines": {
     "node": "18.x"
   },
-  "prisma": {
-    "schema": "prisma/schema.prisma"
-  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
