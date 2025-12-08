@@ -73,6 +73,22 @@ fastify.register(async (fastify) => {
         }
         return kbService.searchKnowledge(query);
     });
+
+    // --- N8N-Compatible API Endpoints (POST) ---
+
+    // Import API handlers
+    const { validateOrderHandler } = await import('./api/validate-order.js');
+    const { patientHandler } = await import('./api/patient.js');
+    const { historyHandler } = await import('./api/history.js');
+    const { appointmentsHandler } = await import('./api/appointments.js');
+    const { examsHandler } = await import('./api/exams.js');
+
+    // Register POST endpoints
+    fastify.post('/api/validate-order', validateOrderHandler);
+    fastify.post('/api/patient', patientHandler);
+    fastify.post('/api/history', historyHandler);
+    fastify.post('/api/appointments', appointmentsHandler);
+    fastify.post('/api/exams', examsHandler);
 });
 
 const start = async () => {
