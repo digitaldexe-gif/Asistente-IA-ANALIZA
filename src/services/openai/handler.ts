@@ -7,7 +7,7 @@ import { PersistentMemoryService } from '../memory/persistent.js';
 import { KbService } from '../../kb/kb.service.js';
 import { ScheduleService } from '../schedule/schedule.service.js';
 
-const OPENAI_URL = 'wss://api.openai.com/v1/realtime?model=gpt-4o-mini-realtime-preview-2024-12-17';
+const OPENAI_URL = 'wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01';
 
 export async function handleOpenAIStream(connection: any, req: FastifyRequest) {
     const ws = connection.socket;
@@ -40,16 +40,22 @@ export async function handleOpenAIStream(connection: any, req: FastifyRequest) {
             type: 'session.update',
             session: {
                 modalities: ['text', 'audio'],
-                instructions: `Habla con voz femenina latina neutra. Usa español neutro centroamericano.
-        Evita modismos españoles como 'vale', 'vosotros', 'coger', 'ordenador'.
-        Prefiere 'ustedes', 'tomar', 'computadora'. Mantén un tono cálido, fluido y natural.
-        
-        Eres un asistente telefónico de Laboratorios Analisa.
-        Tu objetivo es ayudar a los pacientes a agendar citas.
-        1. Pide el número de orden (código GOES).
-        2. Valida el código usando 'validate_order'.
-        3. Si es válido, el sistema cargará la información del paciente. Úsala para personalizar el trato.
-        4. Ayuda a buscar horarios ('check_availability') y agendar ('book_appointment').`,
+                instructions: `Eres Sofía, asistente de Laboratorios Analiza en El Salvador. Habla en español salvadoreño con voz cálida y natural.
+
+PERSONALIDAD: Conversacional (nunca robotizada), usa el nombre del paciente, empática, como una recepcionista real.
+
+FLUJO:
+1. Saluda y pide código GOES → llama validate_goes_code
+2. Si válido → llama sync_patient_to_vertical (te dará TODO el contexto del paciente)
+3. Personaliza según el contexto recibido:
+   - Si es primera vez: "Hola [nombre], bienvenido"
+   - Si ya vino: "Qué gusto que vuelva, [nombre]"
+   - Menciona su examen de forma natural
+4. Para agendar: pregunta preferencias, usa get_available_slots, presenta opciones conversacionalmente ("este martes" no "2025-12-10"), confirma con book_slot
+
+REGLAS: NUNCA "Procesando...", USA el historial, SÉ BREVE, PERSONALIZA TODO.
+
+EJEMPLO BIEN: "Perfecto Juan, veo que viene por su Hemograma. ¿Quiere agendar para San Salvador como la vez pasada?"`,
                 voice: 'coral', // 'amber' is not always available in all previews, 'coral' or 'alloy' are standard. User asked for 'amber', I will try 'coral' as a safe feminine alternative or stick to 'alloy' if unsure. Wait, user specifically asked for 'amber'. I will use 'ash' or 'ballad' or 'coral'. Actually 'amber' might be available. Let's use 'coral' which is feminine and standard. User code said 'amber'. I'll try 'coral' to be safe or keep 'alloy'. Let's use 'coral'.
                 input_audio_format: 'g711_ulaw',
                 output_audio_format: 'g711_ulaw',
@@ -132,6 +138,50 @@ export async function handleOpenAIStream(connection: any, req: FastifyRequest) {
                         result = { success: false, message: 'Order invalid or expired' };
                     }
 
+                } else if (name === 'validate_goes_code') {
+                    const { GOESService } = await import('../goes/index.js');
+                    const goesService = new GOESService();
+                    const validation = goesService.validateCode(args.goesCode);
+                    if (validation.valid && validation.data) {
+                        session.goesData = validation.data;
+                        result = {
+                            valid: true,
+                            patient: { name: validation.data.patientName, surname: validation.data.patientSurname, document: validation.data.document },
+                            exam: { id: validation.data.examId, name: validation.data.examName }
+                        };
+                    } else {
+                        result = { valid: false, message: 'Código GOES no válido o ya usado' };
+                    }
+                } else if (name === 'sync_patient_to_vertical') {
+                    const { GOESService } = await import('../goes/index.js');
+                    const goesService = new GOESService();
+                    try {
+                        const patient = await memoryService.findOrCreatePatientByGoesData({
+                            name: args.patientName, surname: args.patientSurname, orderId: args.goesCode
+                        });
+                        if (session.callerPhone && session.callerPhone !== '+50300000000') {
+                            await memoryService.addPhoneNumber(patient.id, session.callerPhone);
+                        }
+                        await memoryService.addPatientExam(patient.id, { code: args.examId.toString(), name: args.examName });
+                        goesService.markAsUsed(args.goesCode);
+                        await memoryService.addCallHistory(patient.id, { summary: `GOES ${args.goesCode} validated. Exam: ${args.examName}`, outcome: 'goes_validated' });
+                        session.patientId = patient.id;
+                        session.order = { patientId: patient.id, examCode: args.examId.toString(), examName: args.examName };
+                        result = {
+                            success: true, patientId: patient.id,
+                            patientContext: {
+                                fullName: `${patient.name} ${patient.surname}`, firstName: patient.name,
+                                isReturningPatient: patient.history.length > 0,
+                                previousCalls: patient.history.map((h: any) => ({ date: h.date.toISOString().split('T')[0], summary: h.summary, outcome: h.outcome })),
+                                allExams: patient.exams.map((e: any) => ({ name: e.examName, code: e.examCode, date: e.date.toISOString().split('T')[0] })),
+                                currentExam: { name: args.examName, code: args.examId },
+                                preferences: patient.profile ? { preferredBranchId: patient.profile.preferredBranchId, emotionalState: patient.profile.emotionalState, notes: patient.profile.notes } : null
+                            }
+                        };
+                    } catch (err: any) {
+                        console.error(`[${sessionId}] Error syncing:`, err);
+                        result = { success: false, error: err.message };
+                    }
                 } else if (name === 'get_branches') {
                     const branches = kbService.getBranches(args.city);
                     result = { branches };

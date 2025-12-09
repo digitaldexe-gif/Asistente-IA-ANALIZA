@@ -144,6 +144,56 @@ export const tools = [
     },
     {
         type: 'function',
+        name: 'validate_goes_code',
+        description: 'Validates a 6-digit GOES code from the Ministry of Health. ALWAYS call this when patient provides a code. Returns patient and exam data if valid.',
+        parameters: {
+            type: 'object',
+            properties: {
+                goesCode: {
+                    type: 'string',
+                    description: 'The 6-digit GOES code from the patient',
+                },
+            },
+            required: ['goesCode'],
+        },
+    },
+    {
+        type: 'function',
+        name: 'sync_patient_to_vertical',
+        description: 'Syncs GOES patient to Vertical database. Call IMMEDIATELY after successful validation. Creates patient record and marks code as used.',
+        parameters: {
+            type: 'object',
+            properties: {
+                goesCode: {
+                    type: 'string',
+                    description: 'The validated GOES code',
+                },
+                patientName: {
+                    type: 'string',
+                    description: 'Patient first name from validation',
+                },
+                patientSurname: {
+                    type: 'string',
+                    description: 'Patient surname from validation',
+                },
+                document: {
+                    type: 'string',
+                    description: 'Patient document from validation',
+                },
+                examId: {
+                    type: 'number',
+                    description: 'Exam ID from validation',
+                },
+                examName: {
+                    type: 'string',
+                    description: 'Exam name from validation',
+                },
+            },
+            required: ['goesCode', 'patientName', 'patientSurname', 'document', 'examId', 'examName'],
+        },
+    },
+    {
+        type: 'function',
         name: 'book_slot',
         description: 'Books a specific time slot for a patient.',
         parameters: {
