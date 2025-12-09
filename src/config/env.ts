@@ -4,7 +4,7 @@ import { z } from 'zod';
 dotenv.config();
 
 const envSchema = z.object({
-    PORT: z.string().default('3000'),
+    PORT: z.string().default(process.env.PORT || '3000'),
     APP_MODE: z.enum(['demo', 'production']).default('demo'),
     OPENAI_API_KEY: z.string().min(1),
     TWILIO_ACCOUNT_SID: z.string().optional(),
