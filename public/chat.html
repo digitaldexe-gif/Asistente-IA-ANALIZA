@@ -31,6 +31,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
 
         .chat-header {
@@ -38,6 +39,10 @@
             color: white;
             padding: 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .chat-header h1 {
@@ -48,6 +53,48 @@
         .chat-header p {
             font-size: 14px;
             opacity: 0.9;
+        }
+
+        /* Avatar for Voice Mode */
+        .header-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .header-avatar.speaking {
+            box-shadow: 0 0 15px #00ff88;
+            transform: scale(1.1);
+        }
+
+        .header-avatar .pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            animation: pulse 1.5s infinite;
+            opacity: 0;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
 
         .chat-messages {
@@ -87,24 +134,13 @@
             border-bottom-right-radius: 4px;
         }
 
-        .message.system {
-            justify-content: center;
-        }
-
-        .message.system .message-content {
-            background: #e3f2fd;
-            color: #1976d2;
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: 12px;
-        }
-
         .chat-input-container {
             padding: 20px;
             background: white;
             border-top: 1px solid #e0e0e0;
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         .chat-input {
@@ -130,21 +166,41 @@
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
         }
 
-        .send-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .btn-mic {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: #e0e0e0;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
         }
 
-        .send-button:active {
-            transform: translateY(0);
+        .btn-mic.active {
+            background: #ff4757;
+            color: white;
+            animation: pulse-red 1.5s infinite;
         }
 
-        .send-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
         }
 
         .info-banner {
@@ -161,47 +217,71 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <h1>🏥 Chat con Sofía</h1>
-            <p>Asistente Virtual - Laboratorios Analiza</p>
-            <div style="margin-top: 10px;">
-                <a href="/voice.html"
-                    style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 5px 15px; border-radius: 15px; font-size: 13px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; transition: background 0.2s;">
-                    📞 Modo Voz
-                </a>
+            <div class="header-avatar" id="avatarVisualizer">
+                👩‍⚕️
+                <div class="pulse"></div>
+            </div>
+            <div>
+                <h1>🏥 Chat con Sofía</h1>
+                <p>Asistente Virtual - Laboratorios Analiza</p>
             </div>
         </div>
 
         <div class="info-banner" id="statusBanner">
-            ⚪ Conectando con el servidor...
+            ⚪ Conectando con servidor...
         </div>
 
         <div class="chat-messages" id="messages">
             <div class="message assistant">
                 <div class="message-content">
-                    Hola, soy Sofía de Laboratorios Analiza. ¿En qué puedo ayudarte hoy?
+                    Hola, soy Sofía de Laboratorios Analiza. Puedes escribir o usar el micrófono para hablar conmigo.
                 </div>
             </div>
         </div>
 
         <div class="chat-input-container">
-            <input type="text" class="chat-input" id="messageInput" placeholder="Escribe tu mensaje..."
+            <button class="btn-mic" id="micBtn" title="Mantener para hablar o click para toggle">🎤</button>
+            <input type="text" class="chat-input" id="messageInput" placeholder="Escribe un mensaje..."
                 autocomplete="off" disabled />
             <button class="send-button" id="sendButton" disabled>Enviar</button>
         </div>
     </div>
 
     <script>
+        // --- UI Elements ---
         const messagesContainer = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
         const statusBanner = document.getElementById('statusBanner');
+        const micBtn = document.getElementById('micBtn');
+        const avatarVisualizer = document.getElementById('avatarVisualizer');
 
+        // --- WebSocket State ---
         let ws;
         let currentAssistantMessageDiv = null;
 
+        // --- Audio State ---
+        const TARGET_SAMPLE_RATE = 24000;
+        let audioContext;
+        let stream;
+        let processor;
+        let isRecording = false;
+        let nextStartTime = 0;
+
+        // --- 1. WebSocket Connection ---
         function connect() {
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsUrl = `${protocol}//${window.location.host}/chat/realtime`;
+            let wsUrl;
+
+            // Logic to handle local testing vs production deployment
+            if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                // If local, connect to Railway Production
+                console.log('Detected local environment. Connecting to Production Server...');
+                wsUrl = 'wss://web-production-6e86.up.railway.app/chat/realtime';
+            } else {
+                // If deployed, connect to self
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                wsUrl = `${protocol}//${window.location.host}/chat/realtime`;
+            }
 
             console.log('Connecting to:', wsUrl);
             ws = new WebSocket(wsUrl);
@@ -212,6 +292,7 @@
                 statusBanner.style.color = '#155724';
                 messageInput.disabled = false;
                 sendButton.disabled = false;
+                micBtn.disabled = false;
                 messageInput.focus();
             };
 
@@ -221,13 +302,14 @@
                 statusBanner.style.color = '#721c24';
                 messageInput.disabled = true;
                 sendButton.disabled = true;
-
+                micBtn.disabled = true;
                 setTimeout(connect, 3000);
             };
 
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
 
+                // Handle Text
                 if (data.event === 'text') {
                     if (!currentAssistantMessageDiv) {
                         currentAssistantMessageDiv = createMessageDiv('assistant');
@@ -235,21 +317,23 @@
                     currentAssistantMessageDiv.textContent += data.text;
                     scrollToBottom();
                 }
+                // Handle Audio
+                else if (data.event === 'media' && data.media && data.media.payload) {
+                    playAudioChunk(data.media.payload);
+                }
             };
         }
 
+        // --- 2. Chat UI Logic ---
         function createMessageDiv(role) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${role}`;
-
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
-
             messageDiv.appendChild(contentDiv);
             messagesContainer.appendChild(messageDiv);
             scrollToBottom();
-
-            return contentDiv; // Return the content div to append text
+            return contentDiv;
         }
 
         function addMessage(content, role) {
@@ -267,26 +351,146 @@
 
             addMessage(text, 'user');
             messageInput.value = '';
-
-            // Allow creating a new bubble for the next response
-            currentAssistantMessageDiv = null;
+            currentAssistantMessageDiv = null; // Prepare for new answer
 
             if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({
-                    event: 'text',
-                    text: text
-                }));
+                ws.send(JSON.stringify({ event: 'text', text: text }));
             }
         }
 
+        // --- 3. Audio / Voice Logic ---
+
+        async function startRecording() {
+            if (isRecording) return;
+            try {
+                // Initialize AudioContext if needed
+                if (!audioContext) {
+                    audioContext = new AudioContext({ sampleRate: TARGET_SAMPLE_RATE });
+                    await audioContext.audioWorklet.addModule('pcm-processor.js');
+                }
+
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: TARGET_SAMPLE_RATE,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    }
+                });
+
+                const source = audioContext.createMediaStreamSource(stream);
+                processor = new AudioWorkletNode(audioContext, 'pcm-processor');
+
+                processor.port.onmessage = (e) => {
+                    const float32Data = e.data;
+                    const int16Data = float32ToInt16(float32Data);
+
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        const base64Audio = arrayBufferToBase64(int16Data.buffer);
+                        // Send binary audio frame
+                        ws.send(JSON.stringify({
+                            event: 'media',
+                            media: { payload: base64Audio }
+                        }));
+                    }
+                };
+
+                source.connect(processor);
+                isRecording = true;
+                micBtn.classList.add('active');
+                statusBanner.innerHTML = '🎤 <strong>Grabando...</strong>';
+
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+                alert('No se pudo acceder al micrófono');
+            }
+        }
+
+        function stopRecording() {
+            if (!isRecording) return;
+
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            if (processor) processor.disconnect();
+
+            isRecording = false;
+            micBtn.classList.remove('active');
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                statusBanner.innerHTML = '🟢 <strong>Conectado en Tiempo Real</strong>';
+            }
+        }
+
+        function toggleRecording() {
+            if (isRecording) stopRecording();
+            else startRecording();
+        }
+
+        // --- Helper: Play Audio ---
+        function playAudioChunk(base64Data) {
+            if (!audioContext) {
+                audioContext = new AudioContext({ sampleRate: TARGET_SAMPLE_RATE });
+            }
+
+            const binaryString = window.atob(base64Data);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            const int16Data = new Int16Array(bytes.buffer);
+            const float32Data = new Float32Array(int16Data.length);
+
+            for (let i = 0; i < int16Data.length; i++) {
+                float32Data[i] = int16Data[i] / 32768.0;
+            }
+
+            const buffer = audioContext.createBuffer(1, float32Data.length, TARGET_SAMPLE_RATE);
+            buffer.copyToChannel(float32Data, 0);
+
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+
+            if (nextStartTime < audioContext.currentTime) {
+                nextStartTime = audioContext.currentTime;
+            }
+            source.start(nextStartTime);
+            nextStartTime += buffer.duration;
+
+            // Visual effect on avatar
+            avatarVisualizer.classList.add('speaking');
+            setTimeout(() => avatarVisualizer.classList.remove('speaking'), buffer.duration * 1000);
+        }
+
+        // --- Audio Utils ---
+        function float32ToInt16(float32Array) {
+            const int16Array = new Int16Array(float32Array.length);
+            for (let i = 0; i < float32Array.length; i++) {
+                const s = Math.max(-1, Math.min(1, float32Array[i]));
+                int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            }
+            return int16Array;
+        }
+
+        function arrayBufferToBase64(buffer) {
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            const len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+        }
+
+        // --- Event Listeners ---
         sendButton.addEventListener('click', sendMessage);
         messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+            if (e.key === 'Enter') sendMessage();
         });
 
-        // Initialize connection
+        micBtn.addEventListener('click', toggleRecording);
+
+        // Start connection
         connect();
 
     </script>
