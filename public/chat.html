@@ -147,51 +147,6 @@
             cursor: not-allowed;
         }
 
-        .typing-indicator {
-            display: none;
-            padding: 12px 16px;
-            background: white;
-            border-radius: 18px;
-            border-bottom-left-radius: 4px;
-            max-width: 70%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .typing-indicator.show {
-            display: block;
-        }
-
-        .typing-indicator span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #999;
-            border-radius: 50%;
-            margin: 0 2px;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-
-            0%,
-            60%,
-            100% {
-                transform: translateY(0);
-            }
-
-            30% {
-                transform: translateY(-10px);
-            }
-        }
-
         .info-banner {
             background: #fff3cd;
             color: #856404;
@@ -199,16 +154,6 @@
             text-align: center;
             font-size: 13px;
             border-bottom: 1px solid #ffeaa7;
-        }
-
-        .tools-badge {
-            display: inline-block;
-            background: #4caf50;
-            color: white;
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 10px;
-            margin-left: 8px;
         }
     </style>
 </head>
@@ -226,22 +171,22 @@
             </div>
         </div>
 
-        <div class="info-banner">
-            <strong>Demo en Tiempo Real</strong> - Todos los tools se ejecutan de verdad en el backend
+        <div class="info-banner" id="statusBanner">
+            ⚪ Conectando con el servidor...
         </div>
 
         <div class="chat-messages" id="messages">
             <div class="message assistant">
                 <div class="message-content">
-                    Hola, soy Sofía de Laboratorios Analiza. ¿Me podría dar su código GOES de 6 dígitos, por favor?
+                    Hola, soy Sofía de Laboratorios Analiza. ¿En qué puedo ayudarte hoy?
                 </div>
             </div>
         </div>
 
         <div class="chat-input-container">
             <input type="text" class="chat-input" id="messageInput" placeholder="Escribe tu mensaje..."
-                autocomplete="off" />
-            <button class="send-button" id="sendButton">Enviar</button>
+                autocomplete="off" disabled />
+            <button class="send-button" id="sendButton" disabled>Enviar</button>
         </div>
     </div>
 
@@ -249,92 +194,88 @@
         const messagesContainer = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
-        let sessionId = null;
+        const statusBanner = document.getElementById('statusBanner');
 
-        // Codigos de prueba disponibles
-        const testCodes = ['123456', '789012', '345678', '901234', '567890'];
+        let ws;
+        let currentAssistantMessageDiv = null;
 
-        function addMessage(content, role) {
+        function connect() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/chat/realtime`;
+
+            console.log('Connecting to:', wsUrl);
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = () => {
+                statusBanner.innerHTML = '🟢 <strong>Conectado en Tiempo Real</strong>';
+                statusBanner.style.background = '#d4edda';
+                statusBanner.style.color = '#155724';
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.focus();
+            };
+
+            ws.onclose = () => {
+                statusBanner.innerHTML = '🔴 <strong>Desconectado. Reintentando...</strong>';
+                statusBanner.style.background = '#f8d7da';
+                statusBanner.style.color = '#721c24';
+                messageInput.disabled = true;
+                sendButton.disabled = true;
+
+                setTimeout(connect, 3000);
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+
+                if (data.event === 'text') {
+                    if (!currentAssistantMessageDiv) {
+                        currentAssistantMessageDiv = createMessageDiv('assistant');
+                    }
+                    currentAssistantMessageDiv.textContent += data.text;
+                    scrollToBottom();
+                }
+            };
+        }
+
+        function createMessageDiv(role) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${role}`;
 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
-            contentDiv.textContent = content;
 
             messageDiv.appendChild(contentDiv);
             messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+
+            return contentDiv; // Return the content div to append text
+        }
+
+        function addMessage(content, role) {
+            const contentDiv = createMessageDiv(role);
+            contentDiv.textContent = content;
+        }
+
+        function scrollToBottom() {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        function showTyping() {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message assistant';
-            typingDiv.innerHTML = `
-                <div class="typing-indicator show">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            `;
-            typingDiv.id = 'typing';
-            messagesContainer.appendChild(typingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
 
-        function hideTyping() {
-            const typing = document.getElementById('typing');
-            if (typing) typing.remove();
-        }
-
-        async function sendMessage() {
-            const message = messageInput.value.trim();
-            if (!message) return;
-
-            // Add user message
-            addMessage(message, 'user');
+            addMessage(text, 'user');
             messageInput.value = '';
-            sendButton.disabled = true;
-            showTyping();
 
-            try {
-                const response = await fetch('http://localhost:3000/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        sessionId: sessionId
-                    })
-                });
+            // Allow creating a new bubble for the next response
+            currentAssistantMessageDiv = null;
 
-                const data = await response.json();
-                hideTyping();
-
-                if (data.sessionId) {
-                    sessionId = data.sessionId;
-                }
-
-                // Show tools executed
-                if (data.toolsExecuted && data.toolsExecuted.length > 0) {
-                    const toolsMessage = `🔧 Tools ejecutados: ${data.toolsExecuted.join(', ')}`;
-                    const systemDiv = document.createElement('div');
-                    systemDiv.className = 'message system';
-                    systemDiv.innerHTML = `<div class="message-content">${toolsMessage}</div>`;
-                    messagesContainer.appendChild(systemDiv);
-                }
-
-                // Add assistant response
-                addMessage(data.response, 'assistant');
-
-            } catch (error) {
-                hideTyping();
-                addMessage('Error: No se pudo conectar con el servidor. Asegúrate de que el backend esté corriendo en http://localhost:3000', 'system');
-                console.error('Error:', error);
-            } finally {
-                sendButton.disabled = false;
-                messageInput.focus();
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    event: 'text',
+                    text: text
+                }));
             }
         }
 
@@ -345,12 +286,9 @@
             }
         });
 
-        // Auto-focus input
-        messageInput.focus();
+        // Initialize connection
+        connect();
 
-        // Show available test codes
-        console.log('📝 Códigos GOES de prueba:', testCodes);
-        console.log('💡 Prueba diciendo: "Mi código es 789012"');
     </script>
 </body>
 
