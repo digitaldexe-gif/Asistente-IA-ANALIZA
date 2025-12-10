@@ -188,4 +188,12 @@ export class PersistentMemoryService {
     clearSession(sessionId: string): void {
         this.activeSessions.delete(sessionId);
     }
+    async addMessage(sessionId: string, role: string, content: string): Promise<void> {
+        const session = this.getSession(sessionId);
+        if (!session.history) {
+            session.history = [];
+        }
+        session.history.push({ role, content, timestamp: new Date() });
+        this.updateSession(sessionId, { history: session.history });
+    }
 }

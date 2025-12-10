@@ -6,7 +6,7 @@ import { PersistentMemoryService } from '../services/memory/persistent.js';
 import { KbService } from '../kb/kb.service.js';
 import { ScheduleService } from '../services/schedule/index.js';
 
-const openai = new OpenAI({ apiKey: config.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: config.OPENAI_API_KEY as string });
 
 interface ChatMessage {
     role: 'user' | 'assistant' | 'system';

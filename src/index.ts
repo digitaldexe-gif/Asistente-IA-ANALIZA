@@ -12,7 +12,6 @@ const __dirname = dirname(__filename);
 
 const fastify = Fastify({
     logger: true,
-    logger: true,
 });
 
 // Import providers
