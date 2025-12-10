@@ -107,6 +107,7 @@ export class OpenAICore {
 
         this.openaiWs.on('error', (err) => {
             console.error(`[${this.sessionId}] OpenAI WebSocket Error:`, err);
+            this.emit('error', err);
         });
     }
 

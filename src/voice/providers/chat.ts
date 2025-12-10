@@ -81,6 +81,20 @@ export class ChatProvider {
             this.openaiCore.close();
         });
 
+
+        // Handle OpenAI errors
+        this.openaiCore.on('error', (err: any) => {
+            console.error(`[ChatProvider] OpenAI Core Error:`, err);
+            if (this.ws.readyState === WebSocket.OPEN) {
+                // Send specific error if API KEY is likely cause (401)
+                if (err.message && err.message.includes('401')) {
+                    this.ws.close(4001, "Backend: OpenAI API Key Invalid");
+                } else {
+                    this.ws.close(1011, "Backend: OpenAI Connection Error");
+                }
+            }
+        });
+
         this.ws.on('error', (err) => {
             console.error(`[ChatProvider] WebSocket error:`, err);
             this.openaiCore.close();
