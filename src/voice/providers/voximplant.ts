@@ -1,83 +1,94 @@
-import WebSocket from 'ws';
-import { FastifyRequest } from 'fastify';
-import { OpenAICore } from '../../services/openai/core.js';
+import WebSocket from "ws";
+import { FastifyRequest } from "fastify";
+import { OpenAICore } from "../../services/openai/core.js";
 
 export class VoximplantProvider {
     private ws: WebSocket;
-    private openaiCore: OpenAICore;
-    private callId: string | null = null;
-    private isOpenAIConnected = false;
+    private openai: OpenAICore;
+    private callId: string;
+    private callerPhone: string;
+    private openAIReady = false;
 
     constructor(connection: any, req: FastifyRequest) {
         this.ws = connection.socket;
+        this.callId = (req.query as any).callId || "unknown-call";
+        this.callerPhone = (req.query as any).caller || "unknown";
 
-        // Extract callId from query or headers if available
-        this.callId = (req.query as any).callId || 'unknown-call-id';
-        const callerPhone = (req.query as any).caller || '+50300000000';
+        console.log(
+            `[VoximplantProvider] WS Connected | callId=${this.callId} | caller=${this.callerPhone}`
+        );
 
-        console.log(`[VoximplantProvider] New connection. CallId: ${this.callId}, Caller: ${callerPhone}`);
-
-        // Instantiate OpenAI Core with G711 ULAW (standard for telephony)
-        this.openaiCore = new OpenAICore({
-            audioFormat: 'g711_ulaw',
-            callerPhone: callerPhone
+        this.openai = new OpenAICore({
+            callerPhone: this.callerPhone,
+            audioFormat: "pcm16",  // CORRECT FOR VOXIMPLANT
         });
 
         this.setupHandlers();
     }
 
     private setupHandlers() {
-        // Handle audio from OpenAI -> Voximplant
-        this.openaiCore.on('audio', (base64Audio: string) => {
-            if (this.ws.readyState === WebSocket.OPEN) {
-                // Convert Base64 -> Binary Buffer for native Voximplant playback
-                const audioBuffer = Buffer.from(base64Audio, 'base64');
-                this.ws.send(audioBuffer);
+        // ---- OPENAI → VOXIMPLANT (IA habla al paciente) ----
+        this.openai.on("audio", (base64Audio: string) => {
+            if (this.ws.readyState !== WebSocket.OPEN) return;
+
+            // Convert Base64 → Binary buffer for Voximplant
+            const buffer = Buffer.from(base64Audio, "base64");
+
+            try {
+                this.ws.send(buffer, { binary: true });
+            } catch (err) {
+                console.error("[VoximplantProvider] Error sending audio:", err);
             }
         });
 
-        // Handle text/tools output (optional, mostly for debugging or metadata if needed)
-        // this.openaiCore.on('text', ...);
+        // When OpenAI Realtime is ready
+        this.openai.on("ready", () => {
+            this.openAIReady = true;
+            console.log("[VoximplantProvider] OpenAI session is ready.");
+        });
 
-        // Handle messages from Voximplant -> OpenAI
-        this.ws.on('message', (data: any, isBinary: boolean) => {
+        // ---- VOXIMPLANT → OPENAI (Audio del cliente) ----
+        this.ws.on("message", (data: any, isBinary: boolean) => {
+            if (isBinary) {
+                // PCM → base64 for OpenAI
+                const b64 = Buffer.from(data).toString("base64");
+
+                if (this.openAIReady) {
+                    this.openai.sendAudio(b64);
+                }
+
+                return;
+            }
+
+            // ---- CONTROL MESSAGES ----
             try {
-                if (isBinary) {
-                    // Binary = Audio Stream (G711)
-                    // Convert Buffer -> Base64 for OpenAI
-                    const b64 = (data as Buffer).toString('base64');
-                    // Only send if OpenAI is open. If we relied on 'start' event, 
-                    // we might potentially drop first milliseconds of audio if start hasn't processed yet.
-                    // But 'start' is usually sent immediately.
-                    this.openaiCore.sendAudio(b64);
-                } else {
-                    // Text = Control Messages (JSON)
-                    const msg = JSON.parse(data.toString());
+                const msg = JSON.parse(data.toString());
 
-                    if (msg.event === 'start') {
-                        console.log(`[VoximplantProvider] 'start' event received for ${this.callId}`);
-                        if (!this.isOpenAIConnected) {
-                            this.openaiCore.connect();
-                            this.isOpenAIConnected = true;
-                        }
-                    } else if (msg.event === 'stop') {
-                        console.log(`[VoximplantProvider] 'stop' event received`);
-                        this.openaiCore.close();
-                    }
+                if (msg.event === "start") {
+                    console.log("[VoximplantProvider] Received START event");
+                    this.openai.connect(); // Begin Realtime session
+                }
+
+                if (msg.event === "stop") {
+                    console.log("[VoximplantProvider] Received STOP event");
+                    this.openai.close();
                 }
             } catch (err) {
-                console.error(`[VoximplantProvider] Error processing message:`, err);
+                console.error("[VoximplantProvider] Error parsing JSON:", err);
             }
         });
 
-        this.ws.on('close', () => {
-            console.log(`[VoximplantProvider] Connection closed for ${this.callId}`);
-            this.openaiCore.close();
+        // ---- CALL / WS CLOSE ----
+        this.ws.on("close", () => {
+            console.log(
+                `[VoximplantProvider] WS closed | callId=${this.callId}`
+            );
+            this.openai.close();
         });
 
-        this.ws.on('error', (err) => {
-            console.error(`[VoximplantProvider] WebSocket error:`, err);
-            this.openaiCore.close();
+        this.ws.on("error", (err) => {
+            console.error("[VoximplantProvider] WebSocket error:", err);
+            this.openai.close();
         });
     }
 }
