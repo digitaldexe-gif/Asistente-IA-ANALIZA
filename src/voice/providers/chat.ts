@@ -82,16 +82,41 @@ export class ChatProvider {
         });
 
 
+
+        this.openaiCore.on('close', (data: any) => {
+            console.log(`[ChatProvider] OpenAI Closed. Closing client.`);
+            if (this.ws.readyState === WebSocket.OPEN) {
+                this.ws.close(1000, "Backend: OpenAI Session Ended");
+            }
+        });
+
         // Handle OpenAI errors
         this.openaiCore.on('error', (err: any) => {
             console.error(`[ChatProvider] OpenAI Core Error:`, err);
             if (this.ws.readyState === WebSocket.OPEN) {
-                // Send specific error if API KEY is likely cause (401)
+                // Try to send error message as JSON first for better visibility
+                let errorMsg = "OpenAI Connection Error";
+                let code = 1011;
+
                 if (err.message && err.message.includes('401')) {
-                    this.ws.close(4001, "Backend: OpenAI API Key Invalid");
-                } else {
-                    this.ws.close(1011, "Backend: OpenAI Connection Error");
+                    errorMsg = "OpenAI API Key Invalid";
+                    code = 4001;
                 }
+
+                try {
+                    this.ws.send(JSON.stringify({
+                        event: 'error',
+                        message: errorMsg,
+                        code: code
+                    }));
+                } catch (e) { /* ignore send error */ }
+
+                // Then close
+                setTimeout(() => {
+                    if (this.ws.readyState === WebSocket.OPEN) {
+                        this.ws.close(code, "Backend: " + errorMsg);
+                    }
+                }, 100); // Small delay to allow message to send
             }
         });
 

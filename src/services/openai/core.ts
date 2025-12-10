@@ -101,8 +101,9 @@ export class OpenAICore {
             }
         });
 
-        this.openaiWs.on('close', () => {
-            console.log(`[${this.sessionId}] OpenAI connection closed`);
+        this.openaiWs.on('close', (code, reason) => {
+            console.log(`[${this.sessionId}] OpenAI connection closed: ${code} ${reason}`);
+            this.emit('close', { code, reason });
         });
 
         this.openaiWs.on('error', (err) => {

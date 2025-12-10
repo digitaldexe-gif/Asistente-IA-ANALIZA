@@ -345,6 +345,22 @@
                 else if (data.event === 'media' && data.media && data.media.payload) {
                     playAudioChunk(data.media.payload);
                 }
+                // Handle Explicit Error
+                else if (data.event === 'error') {
+                    console.error("Backend Error:", data.message);
+                    let displayMsg = `⛔ <strong>Error: ${data.message}</strong>`;
+                    if (data.code === 4001) displayMsg += ' (Revisa la API Key)';
+
+                    statusBanner.innerHTML = displayMsg;
+                    statusBanner.style.background = '#f8d7da';
+                    statusBanner.style.color = '#721c24';
+
+                    // Disable UI
+                    messageInput.disabled = true;
+                    sendButton.disabled = true;
+                    micBtn.disabled = true;
+                    ws.close(); // Stop reconnecting
+                }
             };
         }
 
