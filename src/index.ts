@@ -1,7 +1,4 @@
 import Fastify from 'fastify';
-import fastifyWebsocket from '@fastify/websocket';
-import fastifyStatic from '@fastify/static';
-import fastifyCors from '@fastify/cors'; // Using import from package
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { config } from './config/env.js';
@@ -18,18 +15,18 @@ const fastify = Fastify({
 import { VoximplantProvider } from './voice/providers/voximplant.js';
 import { ChatWebSocketProvider } from './voice/providers/ChatWebSocketProvider.js';
 
-// 1. Register CORS first (Verified requirement)
-fastify.register(fastifyCors, {
+// 1. Register CORS first
+await fastify.register(import('@fastify/cors'), {
     origin: true
 });
 
-// 2. Register WebSocket (Verified requirement: correct plugin import)
-fastify.register(fastifyWebsocket, {
+// 2. Register WebSocket with options
+await fastify.register(import('@fastify/websocket'), {
     options: { maxPayload: 1048576 } // 1MB max payload
 });
 
 // 3. Register Static handling
-fastify.register(fastifyStatic, {
+await fastify.register(import('@fastify/static'), {
     root: join(__dirname, '../public'),
     prefix: '/'
 });
