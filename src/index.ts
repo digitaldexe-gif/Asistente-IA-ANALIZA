@@ -18,7 +18,15 @@ const fastify = Fastify({
 import { VoximplantProvider } from './voice/providers/voximplant.js';
 import { ChatProvider } from './voice/providers/chat.js';
 
-fastify.register(websocket);
+// Register CORS first
+fastify.register(import('@fastify/cors'), {
+    origin: true
+});
+
+// Register WebSocket with options
+fastify.register(websocket, {
+    options: { maxPayload: 1048576 } // 1MB max payload
+});
 
 // Register static file serving
 fastify.register(fastifyStatic, {
@@ -27,15 +35,21 @@ fastify.register(fastifyStatic, {
 });
 
 fastify.register(async (fastify) => {
-    // --- Web Chat Endpoint ---
+    // --- WebSocket Endpoints ---
+
+    // 1. Chat Realtime
     fastify.get('/chat/realtime', { websocket: true }, (connection, req) => {
+        console.log(`[WS] New connection: ${req.url}`);
         new ChatProvider(connection, req);
     });
 
-    // --- Voximplant Endpoint ---
+    // 2. Voximplant Realtime
     fastify.get('/voximplant/realtime', { websocket: true }, (connection, req) => {
+        console.log(`[WS] New connection: ${req.url} (Voximplant)`);
         new VoximplantProvider(connection, req);
     });
+
+    // --- HTTP Endpoints ---
 
     fastify.get('/health', async () => {
         return { status: 'ok', mode: config.APP_MODE };
@@ -51,7 +65,6 @@ fastify.register(async (fastify) => {
     const kbService = new KbService();
 
     // --- KB Reference Data Endpoints ---
-
     // Get branches
     fastify.get('/kb/branches', async (req: any) => {
         const { city } = req.query;
