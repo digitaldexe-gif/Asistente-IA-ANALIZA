@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { FastifyRequest } from 'fastify';
 import { OpenAICore } from '../../services/openai/core.js';
 
-export class ChatProvider {
+export class ChatWebSocketProvider {
     private ws: WebSocket;
     private openaiCore: OpenAICore;
     private callId: string | null = null;
@@ -14,7 +14,7 @@ export class ChatProvider {
         this.callId = `web-${Date.now()}`;
         const callerPhone = 'WEB-CLIENT';
 
-        console.log(`[ChatProvider] New connection. CallId: ${this.callId}, Caller: ${callerPhone}`);
+        console.log(`[ChatWebSocketProvider] New connection. CallId: ${this.callId}, Caller: ${callerPhone}`);
 
         // Instantiate OpenAI Core
         this.openaiCore = new OpenAICore({
@@ -72,19 +72,17 @@ export class ChatProvider {
                 }
                 // We could add 'stop' or 'start' events here if needed
             } catch (err) {
-                console.error(`[ChatProvider] Error parsing message:`, err);
+                console.error(`[ChatWebSocketProvider] Error parsing message:`, err);
             }
         });
 
         this.ws.on('close', () => {
-            console.log(`[ChatProvider] Connection closed for ${this.callId}`);
+            console.log(`[ChatWebSocketProvider] Connection closed for ${this.callId}`);
             this.openaiCore.close();
         });
 
-
-
         this.openaiCore.on('close', (data: any) => {
-            console.log(`[ChatProvider] OpenAI Closed. Closing client.`);
+            console.log(`[ChatWebSocketProvider] OpenAI Closed. Closing client.`);
             if (this.ws.readyState === WebSocket.OPEN) {
                 this.ws.close(1000, "Backend: OpenAI Session Ended");
             }
@@ -92,7 +90,7 @@ export class ChatProvider {
 
         // Handle OpenAI errors
         this.openaiCore.on('error', (err: any) => {
-            console.error(`[ChatProvider] OpenAI Core Error:`, err);
+            console.error(`[ChatWebSocketProvider] OpenAI Core Error:`, err);
             if (this.ws.readyState === WebSocket.OPEN) {
                 // Try to send error message as JSON first for better visibility
                 let errorMsg = "OpenAI Connection Error";
@@ -121,7 +119,7 @@ export class ChatProvider {
         });
 
         this.ws.on('error', (err) => {
-            console.error(`[ChatProvider] WebSocket error:`, err);
+            console.error(`[ChatWebSocketProvider] WebSocket error:`, err);
             this.openaiCore.close();
         });
     }

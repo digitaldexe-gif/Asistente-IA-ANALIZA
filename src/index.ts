@@ -1,10 +1,10 @@
 import Fastify from 'fastify';
-import websocket from '@fastify/websocket';
+import fastifyWebsocket from '@fastify/websocket';
 import fastifyStatic from '@fastify/static';
+import fastifyCors from '@fastify/cors'; // Using import from package
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { config } from './config/env.js';
-import { handleOpenAIStream } from './services/openai/handler.js';
 import { KbService } from './kb/kb.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -16,34 +16,36 @@ const fastify = Fastify({
 
 // Import providers
 import { VoximplantProvider } from './voice/providers/voximplant.js';
-import { ChatProvider } from './voice/providers/chat.js';
+import { ChatWebSocketProvider } from './voice/providers/ChatWebSocketProvider.js';
 
-// Register CORS first
-fastify.register(import('@fastify/cors'), {
+// 1. Register CORS first (Verified requirement)
+fastify.register(fastifyCors, {
     origin: true
 });
 
-// Register WebSocket with options
-fastify.register(websocket, {
+// 2. Register WebSocket (Verified requirement: correct plugin import)
+fastify.register(fastifyWebsocket, {
     options: { maxPayload: 1048576 } // 1MB max payload
 });
 
-// Register static file serving
+// 3. Register Static handling
 fastify.register(fastifyStatic, {
     root: join(__dirname, '../public'),
     prefix: '/'
 });
 
+// 4. Register Routes
 fastify.register(async (fastify) => {
-    // --- WebSocket Endpoints ---
 
-    // 1. Chat Realtime
+    // --- WebSocket Endpoints (Must be GET) ---
+
+    // Chat Realtime
     fastify.get('/chat/realtime', { websocket: true }, (connection, req) => {
-        console.log(`[WS] New connection: ${req.url}`);
-        new ChatProvider(connection, req);
+        console.log(`[WS] New connection: ${req.url} (Chat)`);
+        new ChatWebSocketProvider(connection, req);
     });
 
-    // 2. Voximplant Realtime
+    // Voximplant Realtime
     fastify.get('/voximplant/realtime', { websocket: true }, (connection, req) => {
         console.log(`[WS] New connection: ${req.url} (Voximplant)`);
         new VoximplantProvider(connection, req);
@@ -55,77 +57,51 @@ fastify.register(async (fastify) => {
         return { status: 'ok', mode: config.APP_MODE };
     });
 
-    // Admin route for KB updates
     fastify.post('/admin/kb/update', async (req, reply) => {
-        // TODO: Implement KB update logic
         return { status: 'received', message: 'KB update logic not implemented yet' };
     });
 
-    // --- Knowledge Base Service (Read-Only Reference Data) ---
+    // --- Services & APIs ---
+
+    // KB Service initialization
     const kbService = new KbService();
 
-    // --- KB Reference Data Endpoints ---
-    // Get branches
-    fastify.get('/kb/branches', async (req: any) => {
-        const { city } = req.query;
-        return { branches: kbService.getBranches(city) };
-    });
+    // KB Endpoints
+    fastify.get('/kb/branches', async (req: any) => ({ branches: kbService.getBranches(req.query.city) }));
 
-    // Get exam info
     fastify.get('/kb/exams', async (req: any) => {
         const { query } = req.query;
-        if (!query) {
-            return { exams: kbService.loadData().exams };
-        }
-        return { exams: kbService.getExamInfo(query) };
+        return query ? { exams: kbService.getExamInfo(query) } : { exams: kbService.loadData().exams };
     });
 
-    // Get company info
-    fastify.get('/kb/company', async () => {
-        return kbService.getCompanyInfo();
-    });
+    fastify.get('/kb/company', async () => kbService.getCompanyInfo());
 
-    // Get policies
-    fastify.get('/kb/policies', async (req: any) => {
-        const { keyword } = req.query;
-        return { policies: kbService.getPolicies(keyword) };
-    });
+    fastify.get('/kb/policies', async (req: any) => ({ policies: kbService.getPolicies(req.query.keyword) }));
 
-    // Get FAQ
     fastify.get('/kb/faq', async (req: any) => {
         const { query } = req.query;
-        if (!query) {
-            return { faqs: kbService.loadData().faq };
-        }
-        return { faqs: kbService.getFAQ(query) };
+        return query ? { faqs: kbService.getFAQ(query) } : { faqs: kbService.loadData().faq };
     });
 
-    // Search knowledge base
     fastify.get('/kb/search', async (req: any) => {
-        const { query } = req.query;
-        if (!query) {
-            return { error: 'query parameter required' };
-        }
-        return kbService.searchKnowledge(query);
+        if (!req.query.query) return { error: 'query parameter required' };
+        return kbService.searchKnowledge(req.query.query);
     });
 
-    // --- N8N-Compatible API Endpoints (POST) ---
-
-    // Import API handlers
+    // API Handlers (Dynamic Imports)
     const { validateOrderHandler } = await import('./api/validate-order.js');
     const { patientHandler } = await import('./api/patient.js');
     const { historyHandler } = await import('./api/history.js');
     const { appointmentsHandler } = await import('./api/appointments.js');
     const { examsHandler } = await import('./api/exams.js');
 
-    // Register POST endpoints
     fastify.post('/api/validate-order', validateOrderHandler);
     fastify.post('/api/patient', patientHandler);
     fastify.post('/api/history', historyHandler);
     fastify.post('/api/appointments', appointmentsHandler);
     fastify.post('/api/exams', examsHandler);
 
-    // --- GOES-Vertical Integration Endpoints ---
+    // GOES Integration
     const { validateGoesCodeHandler } = await import('./api/validate-goes-code.js');
     const { syncPatientHandler } = await import('./api/sync-patient.js');
     const { logConversationHandler } = await import('./api/log-conversation.js');
@@ -134,11 +110,11 @@ fastify.register(async (fastify) => {
     fastify.post('/api/sync-patient', syncPatientHandler);
     fastify.post('/api/log-conversation', logConversationHandler);
 
-    // --- Chat Demo Endpoint ---
+    // Chat API (Fallback/History)
     const { chatHandler } = await import('./api/chat.js');
     fastify.post('/api/chat', chatHandler);
 
-    // --- Serve Static Chat UI ---
+    // Serve HTML
     fastify.get('/chat', async (req, reply) => {
         return reply.sendFile('chat.html');
     });
@@ -146,38 +122,34 @@ fastify.register(async (fastify) => {
 
 const start = async () => {
     try {
-        await fastify.listen({ port: parseInt(config.PORT), host: '0.0.0.0' });
-        console.log(`Server listening on port ${config.PORT} in ${config.APP_MODE} mode`);
+        const port = parseInt(config.PORT || '3000');
+        await fastify.listen({ port, host: '0.0.0.0' });
+        console.log(`Server listening on port ${port} in ${config.APP_MODE} mode`);
     } catch (err) {
         fastify.log.error(err);
         process.exit(1);
     }
 };
 
-// Graceful shutdown handlers for Railway
+// Graceful shutdown
 const gracefulShutdown = async (signal: string) => {
     console.log(`\n${signal} received, closing server gracefully...`);
     try {
         await fastify.close();
-        console.log('Server closed successfully');
         process.exit(0);
     } catch (err) {
-        console.error('Error during graceful shutdown:', err);
         process.exit(1);
     }
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
-// Handle uncaught errors
 process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
     gracefulShutdown('UNCAUGHT_EXCEPTION');
 });
-
 process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    console.error('Unhandled Rejection:', reason);
     gracefulShutdown('UNHANDLED_REJECTION');
 });
 
