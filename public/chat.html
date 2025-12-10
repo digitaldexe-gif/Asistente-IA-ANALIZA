@@ -270,18 +270,9 @@
 
         // --- 1. WebSocket Connection ---
         function connect() {
-            let wsUrl;
-
-            // Logic to handle local testing vs production deployment
-            if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                // If local, connect to Railway Production
-                console.log('Detected local environment. Connecting to Production Server...');
-                wsUrl = 'wss://web-production-6e86.up.railway.app/chat/realtime';
-            } else {
-                // If deployed, connect to self
-                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-                wsUrl = `${protocol}//${window.location.host}/chat/realtime`;
-            }
+            // Configuration
+            const BACKEND_URL = 'wss://web-production-6e86.up.railway.app';
+            const wsUrl = `${BACKEND_URL}/chat/realtime`;
 
             console.log('Connecting to:', wsUrl);
             ws = new WebSocket(wsUrl);
