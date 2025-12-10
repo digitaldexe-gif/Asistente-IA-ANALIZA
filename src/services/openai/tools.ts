@@ -1,17 +1,52 @@
 export const tools = [
     {
         type: 'function',
-        name: 'validate_order',
-        description: 'Validates a GOES order code to retrieve patient and exam details.',
+        name: 'validate_goes_code',
+        description: 'Validates a 6-digit GOES code from the Ministry of Health. ALWAYS call this when patient provides a code. Returns patient and exam data if valid.',
         parameters: {
             type: 'object',
             properties: {
-                orderId: {
+                goesCode: {
                     type: 'string',
-                    description: 'The GOES order code provided by the patient.',
+                    description: 'The 6-digit GOES code from the patient',
                 },
             },
-            required: ['orderId'],
+            required: ['goesCode'],
+        },
+    },
+    {
+        type: 'function',
+        name: 'sync_patient_to_vertical',
+        description: 'Syncs GOES patient to Vertical database. Call IMMEDIATELY after successful validation. Creates patient record and marks code as used.',
+        parameters: {
+            type: 'object',
+            properties: {
+                goesCode: {
+                    type: 'string',
+                    description: 'The validated GOES code',
+                },
+                patientName: {
+                    type: 'string',
+                    description: 'Patient first name from validation',
+                },
+                patientSurname: {
+                    type: 'string',
+                    description: 'Patient surname from validation',
+                },
+                document: {
+                    type: 'string',
+                    description: 'Patient document from validation',
+                },
+                examId: {
+                    type: 'number',
+                    description: 'Exam ID from validation',
+                },
+                examName: {
+                    type: 'string',
+                    description: 'Exam name from validation',
+                },
+            },
+            required: ['goesCode', 'patientName', 'patientSurname', 'document', 'examId', 'examName'],
         },
     },
     {
@@ -121,79 +156,6 @@ export const tools = [
     },
     {
         type: 'function',
-        name: 'suggest_best_slot',
-        description: 'Suggests the best available slot for a patient based on their preferences and history.',
-        parameters: {
-            type: 'object',
-            properties: {
-                patientId: {
-                    type: 'string',
-                    description: 'The patient ID',
-                },
-                branchId: {
-                    type: 'string',
-                    description: 'The branch ID where the appointment should be scheduled',
-                },
-                examCode: {
-                    type: 'string',
-                    description: 'The exam code for the appointment',
-                },
-            },
-            required: ['patientId', 'branchId', 'examCode'],
-        },
-    },
-    {
-        type: 'function',
-        name: 'validate_goes_code',
-        description: 'Validates a 6-digit GOES code from the Ministry of Health. ALWAYS call this when patient provides a code. Returns patient and exam data if valid.',
-        parameters: {
-            type: 'object',
-            properties: {
-                goesCode: {
-                    type: 'string',
-                    description: 'The 6-digit GOES code from the patient',
-                },
-            },
-            required: ['goesCode'],
-        },
-    },
-    {
-        type: 'function',
-        name: 'sync_patient_to_vertical',
-        description: 'Syncs GOES patient to Vertical database. Call IMMEDIATELY after successful validation. Creates patient record and marks code as used.',
-        parameters: {
-            type: 'object',
-            properties: {
-                goesCode: {
-                    type: 'string',
-                    description: 'The validated GOES code',
-                },
-                patientName: {
-                    type: 'string',
-                    description: 'Patient first name from validation',
-                },
-                patientSurname: {
-                    type: 'string',
-                    description: 'Patient surname from validation',
-                },
-                document: {
-                    type: 'string',
-                    description: 'Patient document from validation',
-                },
-                examId: {
-                    type: 'number',
-                    description: 'Exam ID from validation',
-                },
-                examName: {
-                    type: 'string',
-                    description: 'Exam name from validation',
-                },
-            },
-            required: ['goesCode', 'patientName', 'patientSurname', 'document', 'examId', 'examName'],
-        },
-    },
-    {
-        type: 'function',
         name: 'book_slot',
         description: 'Books a specific time slot for a patient.',
         parameters: {
@@ -213,6 +175,29 @@ export const tools = [
                 },
             },
             required: ['slotId', 'patientId', 'examCode'],
+        },
+    },
+    {
+        type: 'function',
+        name: 'suggest_best_slot',
+        description: 'Suggests the best available slot for a patient based on their preferences and history.',
+        parameters: {
+            type: 'object',
+            properties: {
+                patientId: {
+                    type: 'string',
+                    description: 'The patient ID',
+                },
+                branchId: {
+                    type: 'string',
+                    description: 'The branch ID where the appointment should be scheduled',
+                },
+                examCode: {
+                    type: 'string',
+                    description: 'The exam code for the appointment',
+                },
+            },
+            required: ['patientId', 'branchId', 'examCode'],
         },
     },
 ];

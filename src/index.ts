@@ -86,16 +86,28 @@ fastify.register(async (fastify) => {
     });
 
     // API Handlers (Dynamic Imports)
-    const { validateOrderHandler } = await import('./api/validate-order.js');
+    // API Handlers (Dynamic Imports)
+    // const { validateOrderHandler } = await import('./api/validate-order.js'); // REMOVED
     const { patientHandler } = await import('./api/patient.js');
     const { historyHandler } = await import('./api/history.js');
-    const { appointmentsHandler } = await import('./api/appointments.js');
+    const {
+        getAvailableSlotsHandler,
+        bookAppointmentHandler,
+        rescheduleAppointmentHandler,
+        cancelAppointmentHandler
+    } = await import('./api/appointments.js');
     const { examsHandler } = await import('./api/exams.js');
 
-    fastify.post('/api/validate-order', validateOrderHandler);
+    // fastify.post('/api/validate-order', validateOrderHandler); // REMOVED
     fastify.post('/api/patient', patientHandler);
     fastify.post('/api/history', historyHandler);
-    fastify.post('/api/appointments', appointmentsHandler);
+
+    // Agenda Integration Endpoints
+    fastify.get('/api/appointments/available', getAvailableSlotsHandler);
+    fastify.post('/api/appointments/book', bookAppointmentHandler);
+    fastify.post('/api/appointments/reschedule', rescheduleAppointmentHandler);
+    fastify.post('/api/appointments/cancel', cancelAppointmentHandler);
+
     fastify.post('/api/exams', examsHandler);
 
     // GOES Integration
