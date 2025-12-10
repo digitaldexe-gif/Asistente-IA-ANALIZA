@@ -1,18 +1,41 @@
 import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
+import fastifyStatic from '@fastify/static';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { config } from './config/env.js';
 import { handleOpenAIStream } from './services/openai/handler.js';
 import { KbService } from './kb/kb.service.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const fastify = Fastify({
+    logger: true,
     logger: true,
 });
 
+// Import providers
+import { VoximplantProvider } from './voice/providers/voximplant.js';
+import { ChatProvider } from './voice/providers/chat.js';
+
 fastify.register(websocket);
 
+// Register static file serving
+fastify.register(fastifyStatic, {
+    root: join(__dirname, '../public'),
+    prefix: '/'
+});
+
 fastify.register(async (fastify) => {
-    fastify.get('/media-stream', { websocket: true }, (connection, req) => {
-        handleOpenAIStream(connection, req);
+    // --- Web Chat Endpoint ---
+    fastify.get('/chat/realtime', { websocket: true }, (connection, req) => {
+        new ChatProvider(connection, req);
+    });
+
+    // --- Voximplant Endpoint ---
+    fastify.get('/voximplant/realtime', { websocket: true }, (connection, req) => {
+        new VoximplantProvider(connection, req);
     });
 
     fastify.get('/health', async () => {
@@ -98,6 +121,15 @@ fastify.register(async (fastify) => {
     fastify.post('/api/validate-goes-code', validateGoesCodeHandler);
     fastify.post('/api/sync-patient', syncPatientHandler);
     fastify.post('/api/log-conversation', logConversationHandler);
+
+    // --- Chat Demo Endpoint ---
+    const { chatHandler } = await import('./api/chat.js');
+    fastify.post('/api/chat', chatHandler);
+
+    // --- Serve Static Chat UI ---
+    fastify.get('/chat', async (req, reply) => {
+        return reply.sendFile('chat.html');
+    });
 });
 
 const start = async () => {

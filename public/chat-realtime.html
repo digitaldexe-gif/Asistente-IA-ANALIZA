@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Realtime - Laboratorios Analiza</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: #0047ba;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            background: #0047ba;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message.assistant {
+            background: #e9ecef;
+            color: black;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        button {
+            background: #0047ba;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #003790;
+        }
+
+        .status {
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <h2>Asistente Virtual (Realtime)</h2>
+            <div class="status" id="status">Desconectado</div>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="input" placeholder="Escribe tu mensaje..." autocomplete="off">
+            <button id="sendBtn">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const input = document.getElementById('input');
+        const sendBtn = document.getElementById('sendBtn');
+        const statusEl = document.getElementById('status');
+
+        // Connect to WebSocket
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/chat/realtime`;
+        const ws = new WebSocket(wsUrl);
+
+        let currentAssistantMessageDiv = null;
+
+        ws.onopen = () => {
+            statusEl.textContent = 'Conectado';
+            statusEl.style.color = 'green';
+        };
+
+        ws.onclose = () => {
+            statusEl.textContent = 'Desconectado';
+            statusEl.style.color = 'red';
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            if (data.event === 'text') {
+                if (!currentAssistantMessageDiv) {
+                    currentAssistantMessageDiv = createMessageDiv('assistant');
+                }
+                currentAssistantMessageDiv.textContent += data.text;
+                scrollToBottom();
+            }
+            // Reset current message div on some condition? 
+            // Realtime API sends deltas. We might need logic to know when a turn ends or just keep appending 
+            // until the user sends a new message or we detect a pause.
+            // For simplicity, we just append content.
+        };
+
+        function sendMessage() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage('user', text);
+            input.value = '';
+
+            ws.send(JSON.stringify({
+                event: 'text',
+                text: text
+            }));
+
+            // Prepare for new assistant response
+            currentAssistantMessageDiv = null;
+        }
+
+        function createMessageDiv(role) {
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            messagesDiv.appendChild(div);
+            return div;
+        }
+
+        function addMessage(role, text) {
+            const div = createMessageDiv(role);
+            div.textContent = text;
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+
+</html>
