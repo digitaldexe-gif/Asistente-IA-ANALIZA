@@ -296,14 +296,38 @@
                 messageInput.focus();
             };
 
-            ws.onclose = () => {
-                statusBanner.innerHTML = '🔴 <strong>Desconectado. Reintentando...</strong>';
+            ws.onclose = (event) => {
+                console.log("WS Closed:", event.code, event.reason);
+                let message = '🔴 <strong>Desconectado.</strong>';
+
+                if (event.code === 4001) {
+                    message = '⛔ <strong>Error: Clave OpenAI Inválida (401)</strong>. Revisa Railway.';
+                    // Do not retry automatically for auth errors
+                    statusBanner.innerHTML = message;
+                    statusBanner.style.background = '#f8d7da';
+                    statusBanner.style.color = '#721c24';
+                    return;
+                } else if (event.code === 1011) {
+                    message = '⚠️ <strong>Error del Servidor con OpenAI</strong> (Reintentando...)';
+                } else if (event.code === 1006) {
+                    message = '🔴 <strong>Error de Conexión (Backend no responde)</strong>';
+                }
+
+                if (event.reason) {
+                    message += ` <br><small>${event.reason}</small>`;
+                }
+
+                statusBanner.innerHTML = message;
                 statusBanner.style.background = '#f8d7da';
                 statusBanner.style.color = '#721c24';
                 messageInput.disabled = true;
                 sendButton.disabled = true;
                 micBtn.disabled = true;
-                setTimeout(connect, 3000);
+
+                // Retry only if not a permanent error
+                if (event.code !== 4001 && event.code !== 1000) {
+                    setTimeout(connect, 3000);
+                }
             };
 
             ws.onmessage = (event) => {
